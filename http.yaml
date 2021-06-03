@@ -1,0 +1,69 @@
+openapi: 3.0.0
+info:
+  title: Waypoint API
+  description: Waypoint storage goserver
+  version: 1.0.0
+servers:
+  - url: http://localhost/api/v1
+    description: Local server url
+paths:
+  /waypoints:
+    get:
+      summary: Returns the list of saved waypoints.
+      responses:
+        '200':
+          description: A JSON array of waypoints
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Waypoint'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /waypoint:
+    post:
+      summary: Saves a waypoint.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Waypoint'
+      responses:
+        '200':
+          description: A JSON array of waypoints
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Waypoint'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+    Waypoint:
+      type: object
+      required:
+        - latitude
+        - longitude
+        - name
+      properties:
+        latitude:
+          type: integer
+        longitude:
+          type: integer
+        name:
+          type: string

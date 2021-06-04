@@ -11,6 +11,7 @@ const Global = createGlobalStyle`
     body {
         font-family: ${path(['theme', 'fonts', 'primary', 'family'])};
         font-size: ${path(['theme', 'fonts', 'size'])}px;
+        color: ${path(['theme', 'colors', 'text', 'main'])};
     }
 
     * {

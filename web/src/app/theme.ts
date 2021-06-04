@@ -2,16 +2,24 @@ import { mergeDeepRight } from 'ramda'
 
 const base = {
   radius: 4,
+  transition: 0.2,
   fonts:  {
     size: 14,
     primary: {
-      family: 'Baloo Tammudu 2, cursive',
+      family: "'Nanum Gothic', sans-serif",
+      weight: {
+        regular: 400,
+        extrabold: 800,
+      },
+    },
+    script: {
+      family: "'Dancing Script', cursive",
       weight: {
         regular: 400,
       },
     },
     title: {
-      family: 'Limelight, cursive',
+      family: "'Limelight', cursive",
       weight: {
         regular: 400,
       },

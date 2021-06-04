@@ -4,30 +4,46 @@ import styled from 'styled-components'
 
 import type { ConfigType } from '../../config'
 import { useMap } from  '../../../services/map/useMap'
+import { Button } from  '../../../atoms'
 
 type Props = {
   config: ConfigType,
 }
 
 const Container = styled.div`
-    background-color: ${path(['theme', 'colors', 'background', 'main'])};
     display: flex;
+    flex-direction: column;
+    background-color: ${path(['theme', 'colors', 'background', 'main'])};
     height: 100vh;
     width: 100vw;
-    align-items: center;
-    justify-content: center;
 `
 
 const Box = styled.div`
     display: flex;
-    width: calc(100% - 36px);
-    height: calc(100% - 36px);
+    flex: 1;
+    margin: auto;
+    width: 100%;
+    padding: 1rem;
+    overflow: hidden;
+    box-sizing: border-box;
 `
 
 const List = styled.div`
     height: 100%;
     min-width: 350px;
     width: 25%;
+    padding-right: 16px;
+`
+
+const Title = styled.h1`
+    font-size: 3rem;
+    font-family: ${path(['theme', 'fonts', 'title', 'family'])};
+    margin: 0;
+    padding: 1em 1rem;
+
+    & span {
+      font-family: ${path(['theme', 'fonts', 'script', 'family'])};
+    }
 `
 
 const MapContainer = styled.div`
@@ -44,8 +60,11 @@ export const Waypoints = ({ config }: Props) => {
 
   return (
       <Container>
+          <Title>This is the way<span>point app</span>.</Title>
           <Box>
-              <List />
+              <List>
+                  <Button>Add new</Button>
+              </List>
               <MapContainer ref={ref} />
           </Box>
       </Container>

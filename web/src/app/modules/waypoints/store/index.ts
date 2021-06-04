@@ -89,18 +89,30 @@ function reducer (state: State, action: Action) {
 export const useWaypoints = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const getWaypoints = () => {
+    const getWaypoints = async () => {
         dispatch({ type: ActionMap.GET_LIST })
-        WaypointService.list()
-            .then(waypoints => dispatch({ type: ActionMap.GET_LIST_SUCCESS, payload: waypoints }))
-            .catch(error => dispatch({ type: ActionMap.GET_LIST_FAILURE, payload: error.message }))
+        return WaypointService.list()
+            .then(waypoints => {
+              dispatch({ type: ActionMap.GET_LIST_SUCCESS, payload: waypoints })
+              return waypoints
+            })
+            .catch(error => {
+              dispatch({ type: ActionMap.GET_LIST_FAILURE, payload: error.message })
+              return state.list.data
+            })
     }
 
-    const saveWaypoint = (waypoint: Waypoint) => {
+    const saveWaypoint = async (waypoint: Waypoint): Promise<Waypoint> => {
         dispatch({ type: ActionMap.SAVE_ITEM })
-        WaypointService.create(waypoint)
-            .then(waypoint => dispatch({ type: ActionMap.SAVE_ITEM_SUCCESS, payload: waypoint }))
-            .catch(error => dispatch({ type: ActionMap.SAVE_ITEM_FAILURE, payload: error.message }))
+        return WaypointService.create(waypoint)
+            .then(waypoint => {
+              dispatch({ type: ActionMap.SAVE_ITEM_SUCCESS, payload: waypoint })
+              return waypoint
+            })
+            .catch(error => {
+              dispatch({ type: ActionMap.SAVE_ITEM_FAILURE, payload: error.message })
+              return null
+            })
     }
 
     return {

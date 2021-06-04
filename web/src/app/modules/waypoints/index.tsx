@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { path } from 'ramda'
 import styled from 'styled-components'
 
 import type { ConfigType } from '../../config'
-import { useMap } from  '../../../services/map/useMap'
 import { Button } from  '../../../atoms'
+import { Title, Map, List, ListContainer } from './components'
 
-import { Title, Map, ListContainer } from './components'
+import { useMap } from  '../../../services/map/useMap'
+import { useWaypoints } from './store'
 
 type Props = {
   config: ConfigType,
@@ -30,15 +31,37 @@ const Box = styled.div`
     box-sizing: border-box;
 `
 
+const Divider = styled.hr`
+    width: 100%;
+    height: 1px;
+    margin: 1rem 0;
+    background-color: ${path(['theme', 'colors', 'neutral', 'main'])};
+    border: none;
+`
+
+const ButtonWrap = styled.div`
+    padding: 0 1rem;
+`
+
 export const Waypoints = ({ config }: Props) => {
   const { ref } = useMap(config.mapbox)
+  const { state, getWaypoints } = useWaypoints()
+  const isLoading = state.list.loading || state.item.loading
+
+  useEffect(() => {
+      getWaypoints()
+  }, [])
 
   return (
       <Container>
           <Title>This is the way<span>point app</span>.</Title>
           <Box>
               <ListContainer>
-                  <Button>Add new</Button>
+                  <ButtonWrap>
+                      <Button disabled={isLoading} aria-disabled={isLoading}>Add new</Button>
+                  </ButtonWrap>
+                  <Divider />
+                  <List items={state.list.data} count={1000} loadItems={() => Promise.resolve([])} />
               </ListContainer>
               <Map ref={ref} />
           </Box>

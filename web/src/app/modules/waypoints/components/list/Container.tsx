@@ -4,5 +4,4 @@ export const ListContainer = styled.div`
     height: 100%;
     min-width: 350px;
     width: 25%;
-    padding-right: 16px;
 `

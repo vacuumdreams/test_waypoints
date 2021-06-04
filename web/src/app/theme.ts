@@ -1,7 +1,7 @@
 import { mergeDeepRight } from 'ramda'
 
 const base = {
-  radius: 4,
+  radius: 0,
   transition: 0.2,
   fonts:  {
     size: 14,
@@ -9,6 +9,7 @@ const base = {
       family: "'Nanum Gothic', sans-serif",
       weight: {
         regular: 400,
+        bold: 700,
         extrabold: 800,
       },
     },
@@ -32,6 +33,11 @@ const base = {
     background: {
       main: '#FFFFFF',
     },
+    neutral: {
+      main: '#686868',
+      weak: '#e2e2e2',
+      strong: '#424242',
+    },
     primary: {
       main: '#027F99',
       weak: '#B9D9DF',
@@ -49,6 +55,14 @@ export const theme = {
       },
       background: {
         main: '#121212',
+      },
+      neutral: {
+        weak: '#424242',
+        strong: '#e2e2e2',
+      },
+      primary: {
+        weak: '#1C4F59',
+        strong: '#B9D9DF',
       },
     },
   }) as typeof base,

@@ -15,10 +15,10 @@ export const Button = styled.button`
 
     &:disabled {
         cursor: auto;
-        background-color: ${path(['theme', 'colors', 'primary', 'weak'])};
+        background-color: ${path(['theme', 'colors', 'neutral', 'main'])};
     }
 
     &:hover {
-        background-color: ${path(['theme', 'colors', 'primary', 'strong'])};
+        background-color: ${path(['theme', 'colors', 'primary', 'weak'])};
     }
 `

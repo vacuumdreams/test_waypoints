@@ -9,7 +9,10 @@ servers:
 paths:
   /waypoints:
     get:
+      tags:
+        - waypoint
       summary: Returns the list of saved waypoints.
+      operationId: list
       responses:
         '200':
           description: A JSON array of waypoints
@@ -23,7 +26,10 @@ paths:
                   $ref: '#/components/schemas/Waypoint'
   /waypoint:
     post:
+      tags:
+        - waypoint
       summary: Saves a waypoint.
+      operationId: create
       requestBody:
         required: true
         content:
@@ -58,11 +64,19 @@ components:
         - name
       properties:
         latitude:
-          type: integer
+          type: number
+          format: float
+          minimum: -90
+          maximum: 90
+          pattern: '((\-?|\+?)?\d+(\.\d+)?)'
           x-faker: address.latitude
           example: 52.504680
         longitude:
-          type: integer
+          type: number
+          format: float
+          minimum: -180
+          maximum: 180
+          pattern: '((\-?|\+?)?\d+(\.\d+)?)'
           x-faker: address.longitude
           example: 13.329780
         name:

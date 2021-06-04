@@ -4,6 +4,8 @@ import { createGlobalStyle } from 'styled-components'
 
 import { ThemeProvider } from '../services/theme/Provider'
 import { theme, Theme, ThemeMode } from './theme'
+import { config } from './config'
+import { Waypoints } from './modules/waypoints'
 
 const Global = createGlobalStyle`
     body {
@@ -27,5 +29,6 @@ const Global = createGlobalStyle`
 export const App = () => (
   <ThemeProvider<ThemeMode, Theme> mode="auto" theme={theme}>
     <Global />
+    <Waypoints config={config} />
   </ThemeProvider>
 )

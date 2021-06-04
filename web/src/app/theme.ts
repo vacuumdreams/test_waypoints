@@ -1,6 +1,7 @@
 import { mergeDeepRight } from 'ramda'
 
 const base = {
+  radius: 4,
   fonts:  {
     size: 14,
     primary: {

@@ -1,5 +1,6 @@
 import produce from 'immer'
 import { useReducer } from 'react'
+import { insertAll, remove } from 'ramda'
 import { WaypointService, Waypoint } from  '../../../../services/client'
 
 enum ActionMap {
@@ -15,6 +16,7 @@ type State = {
     list: {
         loading: boolean,
         error: null | string,
+        page: number,
         data: Waypoint[],
     },
     item: {
@@ -24,22 +26,28 @@ type State = {
 }
 
 type Action = { type: ActionMap.GET_LIST }
-    | { type: ActionMap.GET_LIST_SUCCESS, payload: Waypoint[] }
-    | { type: ActionMap.GET_LIST_FAILURE, payload: string }
+    | { type: ActionMap.GET_LIST_SUCCESS, payload: { page: number, size: number, data: Waypoint[] } }
+    | { type: ActionMap.GET_LIST_FAILURE, payload: { page: number, data: string } }
     | { type: ActionMap.SAVE_ITEM }
-    | { type: ActionMap.SAVE_ITEM_SUCCESS, payload: Waypoint }
-    | { type: ActionMap.SAVE_ITEM_FAILURE, payload: string }
+    | { type: ActionMap.SAVE_ITEM_SUCCESS, payload: { data: Waypoint } }
+    | { type: ActionMap.SAVE_ITEM_FAILURE, payload: { data: string } }
 
 const initialState: State = {
     list: {
         loading: false,
         error: null,
+        page: 0,
         data: [],
     },
     item: {
         loading: false,
         error: null,
     },
+}
+
+const addReplaceItems = (items: Waypoint[], newItems: Waypoint[], page: number, size: number) => {
+    const start = (page - 1) * size
+    return insertAll(start, newItems, remove(start, newItems.length, items))
 }
 
 function reducer (state: State, action: Action) {
@@ -53,13 +61,14 @@ function reducer (state: State, action: Action) {
     case ActionMap.GET_LIST_SUCCESS: {
         return produce(state, nextState => {
             nextState.list.loading = false
-            nextState.list.data = action.payload
+            nextState.list.page = action.payload.page
+            nextState.list.data = addReplaceItems(state.list.data, action.payload.data, action.payload.page, action.payload.size)
         })
     }
     case ActionMap.GET_LIST_FAILURE: {
         return produce(state, nextState => {
             nextState.list.loading = true
-            nextState.list.error = action.payload
+            nextState.list.error = action.payload.data
         })
     }
     case ActionMap.SAVE_ITEM: {
@@ -71,13 +80,13 @@ function reducer (state: State, action: Action) {
     case ActionMap.SAVE_ITEM_SUCCESS: {
         return produce(state, nextState => {
             nextState.item.loading = false
-            nextState.list.data = [action.payload, ...state.list.data]
+            nextState.list.data = [action.payload.data, ...state.list.data]
         })
     }
     case ActionMap.SAVE_ITEM_FAILURE: {
         return produce(state, nextState => {
             nextState.item.loading = false
-            nextState.item.error = action.payload
+            nextState.item.error = action.payload.data
         })
     }
 
@@ -89,28 +98,28 @@ function reducer (state: State, action: Action) {
 export const useWaypoints = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const getWaypoints = async () => {
+    const getWaypoints = async ({ page, size = 20 }) => {
         dispatch({ type: ActionMap.GET_LIST })
-        return WaypointService.list()
+        return WaypointService.list({ page, size })
             .then(waypoints => {
-              dispatch({ type: ActionMap.GET_LIST_SUCCESS, payload: waypoints })
+              dispatch({ type: ActionMap.GET_LIST_SUCCESS, payload: { page, size, data: waypoints } })
               return waypoints
             })
             .catch(error => {
-              dispatch({ type: ActionMap.GET_LIST_FAILURE, payload: error.message })
+              dispatch({ type: ActionMap.GET_LIST_FAILURE, payload: { page, data: error.message} })
               return state.list.data
             })
     }
 
     const saveWaypoint = async (waypoint: Waypoint): Promise<Waypoint> => {
         dispatch({ type: ActionMap.SAVE_ITEM })
-        return WaypointService.create(waypoint)
+        return WaypointService.create({ requestBody: waypoint })
             .then(waypoint => {
-              dispatch({ type: ActionMap.SAVE_ITEM_SUCCESS, payload: waypoint })
+              dispatch({ type: ActionMap.SAVE_ITEM_SUCCESS, payload: { data: waypoint } })
               return waypoint
             })
             .catch(error => {
-              dispatch({ type: ActionMap.SAVE_ITEM_FAILURE, payload: error.message })
+              dispatch({ type: ActionMap.SAVE_ITEM_FAILURE, payload: { data: error.message } })
               return null
             })
     }

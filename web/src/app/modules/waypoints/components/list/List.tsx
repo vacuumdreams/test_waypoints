@@ -1,5 +1,5 @@
 import React from 'react'
-import { path } from 'ramda'
+import { path, pathSatisfies } from 'ramda'
 import styled from 'styled-components'
 import { FixedSizeList } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
@@ -14,7 +14,9 @@ type Props = {
     loadItems: (startIndex: number, stopIndex: number) => Promise<Waypoint[]>,
 }
 
-const Item = styled.div`
+const even = (num: number) => num % 2 === 0
+
+const Item = styled.div<{ index: number }>`
     display: flex;
     align-items: center;
     text-overflow: ellipsis;
@@ -22,8 +24,9 @@ const Item = styled.div`
     padding: 0 1rem;
     font-weight: ${path(['theme', 'fonts', 'primary', 'weight', 'bold'])};
 
-    &:nth-child(even) {
-      background-color: ${path(['theme', 'colors', 'neutral', 'weak'])}
+    ${p => pathSatisfies(even, ['index'], p)
+    ? `background-color: ${path(['theme', 'colors', 'neutral', 'weak'], p)};`
+    : ''
     }
 
     & span {
@@ -38,7 +41,7 @@ const Item = styled.div`
 `
 
 const Row = (items: Waypoint[]) => ({ index, style }) => (
-    <Item style={style}>
+    <Item style={style} index={index}>
         {items[index] ? <div>{items[index].name}</div> : <Skeleton />}
     </Item>
 )

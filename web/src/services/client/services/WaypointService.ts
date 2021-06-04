@@ -11,23 +11,34 @@ export class WaypointService {
      * @returns Waypoint A JSON array of waypoints
      * @throws ApiError
      */
-    public static async list(): Promise<Array<Waypoint>> {
+    public static async list({
+        page,
+        size,
+    }: {
+        page?: number,
+        size?: number,
+    }): Promise<Array<Waypoint>> {
         const result = await __request({
             method: 'GET',
             path: `/waypoints`,
+            query: {
+                'page': page,
+                'size': size,
+            },
         });
         return result.body;
     }
 
     /**
      * Saves a waypoint.
-     * @param requestBody
      * @returns Waypoint A JSON array of waypoints
      * @throws ApiError
      */
-    public static async create(
+    public static async create({
+        requestBody,
+    }: {
         requestBody: Waypoint,
-    ): Promise<Waypoint> {
+    }): Promise<Waypoint> {
         const result = await __request({
             method: 'POST',
             path: `/waypoint`,

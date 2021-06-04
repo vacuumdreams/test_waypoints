@@ -28,7 +28,6 @@ const Box = styled.div`
     width: 100%;
     padding: 1rem;
     overflow: hidden;
-    box-sizing: border-box;
 `
 
 const Divider = styled.hr`
@@ -48,8 +47,14 @@ export const Waypoints = ({ config }: Props) => {
   const { state, getWaypoints } = useWaypoints()
   const isLoading = state.list.loading || state.item.loading
 
+  const getNextPageOnEnd = useCallback((end) => {
+      if (end > state.list.data.length) {
+        return getWaypoints({ page: state.list.page + 1 })
+      }
+  }, [state.list.data.length])
+
   useEffect(() => {
-      getWaypoints()
+      getWaypoints({ page: 1 })
   }, [])
 
   return (
@@ -61,7 +66,7 @@ export const Waypoints = ({ config }: Props) => {
                       <Button disabled={isLoading} aria-disabled={isLoading}>Add new</Button>
                   </ButtonWrap>
                   <Divider />
-                  <List items={state.list.data} count={1000} loadItems={() => Promise.resolve([])} />
+                  <List items={state.list.data} count={1000} loadItems={(_, end) => getNextPageOnEnd(end)} />
               </ListContainer>
               <Map ref={ref} />
           </Box>

@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development webpack serve",
-    "generate:client": "openapi --input ../http.yaml --output ./src/services/client --useUnionTypes --exportSchemas true",
+    "generate:client": "openapi --input ../http.yaml --output ./src/services/client --useUnionTypes --useOptions --exportSchemas true",
     "build": "webpack build",
     "test": "npm run test"
   },

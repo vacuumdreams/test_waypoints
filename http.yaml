@@ -17,14 +17,10 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 20
+                x-count: 20
                 items:
                   $ref: '#/components/schemas/Waypoint'
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
   /waypoint:
     post:
       summary: Saves a waypoint.
@@ -63,7 +59,13 @@ components:
       properties:
         latitude:
           type: integer
+          x-faker: address.latitude
+          example: 52.504680
         longitude:
           type: integer
+          x-faker: address.longitude
+          example: 13.329780
         name:
           type: string
+          x-faker: '{{address.streetAddress}}, {{address.zipCode}} {{address.cityName}}, {{address.country}}'
+          example: 'Kurfürstendamm 22, 10719 Berlin, Germany'

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "isolatedModules": true,
+    "jsx": "react",
+    "declaration": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "declarationDir": "./build/types",
+    "tsBuildInfoFile": "./build/types/tsbuildinfo.json",
+    "rootDir": "./packages",
+    "skipLibCheck": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+  },
+  "include": [
+    "./src/**/*",
+  ],
+  "exclude": [
+    "node_modules",
+    "./build",
+    "./src/test/*",
+    "./src/**/*.test.tsx",
+    "./src/**/*.stories.tsx",
+    "./src/**/*.fixture.tsx"
+  ]
+}

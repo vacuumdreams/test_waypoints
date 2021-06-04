@@ -1,0 +1,25 @@
+{
+  "name": "waypoints-app",
+  "version": "0.1.0",
+  "description": "Waypoints web application",
+  "author": "Botond Fekete",
+  "private": true,
+  "license": "UNLICENSED",
+  "peerDependencies": {
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "esbuild-loader": "^2.12.0",
+    "eslint": "^7.25.0",
+    "prettier": "2.2.1",
+    "typescript": "^4.2.4",
+    "webpack": "^5.33.2",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2"
+  }
+}

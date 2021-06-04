@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const { spawn } = require('child_process')
-const tsConfig = require('./tsconfig.json')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const MODE = process.env.NODE_ENV === 'development' ? 'development' : 'production'
 const OUT_DIR = process.env.NODE_ENV === 'development' ? 'sandbox' : 'build'
@@ -20,7 +20,9 @@ const devConfig = process.env.NODE_ENV !== 'development' ? {} : {
     inline: true,
     compress: true,
     open: true,
-    historyApiFallback: true,
+    historyApiFallback: {
+      index: '../index.html',
+    },
     serveIndex: true,
     before: async () => {
         if (fs.existsSync(sandboxApiPath)) {
@@ -44,8 +46,8 @@ module.exports = {
     publicPath: '/',
   },
   externals: {
-    'react': 'react',
-    'react-dom': 'react-dom',
+    'react': 'React',
+    'react-dom': 'ReactDOM',
   },
   module: {
     rules: [
@@ -60,6 +62,9 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({ template: path.join(__dirname, 'index.html') }),
+  ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },

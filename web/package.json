@@ -14,22 +14,30 @@
     "build": "webpack build",
     "test": "npm run test"
   },
+  "dependencies": {
+    "mapbox-gl": "^2.3.0",
+    "ramda": "^0.27.1",
+    "react-loading-skeleton": "^2.2.0"
+  },
   "peerDependencies": {
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },
   "devDependencies": {
+    "@types/ramda": "^0.27.40",
     "@types/react": "17.0.2",
     "@types/react-dom": "17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "esbuild-loader": "^2.12.0",
     "eslint": "^7.25.0",
+    "html-webpack-plugin": "^5.3.1",
     "open-api-mocker": "^1.7.0",
+    "openapi-typescript-codegen": "^0.9.3",
     "prettier": "2.2.1",
     "typescript": "^4.2.4",
     "webpack": "^5.33.2",
     "webpack-cli": "^4.6.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^3.7.2"
   }
 }

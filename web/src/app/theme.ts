@@ -1,16 +1,17 @@
 import { mergeDeepRight } from 'ramda'
 
-const light = {
+const base = {
   fonts:  {
+    size: 14,
     primary: {
       family: 'Baloo Tammudu 2, cursive',
-      size: {
+      weight: {
         regular: 400,
       },
     },
     title: {
       family: 'Limelight, cursive',
-      size: {
+      weight: {
         regular: 400,
       },
     },
@@ -19,6 +20,9 @@ const light = {
     text: {
       main: '#252525',
     },
+    background: {
+      main: '#FFFFFF',
+    },
     primary: {
       main: '#027F99',
     },
@@ -26,12 +30,19 @@ const light = {
 }
 
 export const theme = {
-  light,
-  dark: mergeDeepRight(light, {
+  light: base,
+  dark: mergeDeepRight(base, {
     colors: {
       text: {
         main: '#F8F8F8',
       },
+      background: {
+        main: '#080808',
+      },
     },
-  }),
+  }) as typeof base,
 }
+
+type ThemCollection = typeof theme;
+export type Theme = typeof base;
+export type ThemeMode = keyof ThemCollection;

@@ -26,6 +26,8 @@ const base = {
     },
     primary: {
       main: '#027F99',
+      weak: '#B9D9DF',
+      strong: '#1C4F59',
     },
   },
 }
@@ -38,7 +40,7 @@ export const theme = {
         main: '#F8F8F8',
       },
       background: {
-        main: '#080808',
+        main: '#121212',
       },
     },
   }) as typeof base,

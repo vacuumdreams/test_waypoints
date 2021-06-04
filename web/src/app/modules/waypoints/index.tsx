@@ -1,4 +1,5 @@
 import React from 'react'
+import { path } from 'ramda'
 import styled from 'styled-components'
 
 import type { ConfigType } from '../../config'
@@ -9,6 +10,7 @@ type Props = {
 }
 
 const Container = styled.div`
+    background-color: ${path(['theme', 'colors', 'background', 'main'])};
     display: flex;
     height: 100vh;
     width: 100vw;

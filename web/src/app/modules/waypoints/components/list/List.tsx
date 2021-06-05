@@ -46,29 +46,27 @@ const Row = (items: Waypoint[]) => ({ index, style }) => (
     </Item>
 )
 
-export const List = ({ items, count, loadItems }:  Props) => {
-    return (
-        <InfiniteLoader
-            isItemLoaded={(index) => !!items[index]}
-            itemCount={count}
-            loadMoreItems={loadItems}
-        >
-            {({ onItemsRendered, ref }) => (
-                <Autosizer>
-                    {({ width, height }) => (
-                        <FixedSizeList
-                            ref={ref}
-                            itemCount={count}
-                            itemSize={48}
-                            height={height}
-                            width={width}
-                            onItemsRendered={onItemsRendered}
-                        >
-                          {Row(items)}
-                        </FixedSizeList>
-                    )}
-                </Autosizer>
-            )}
-        </InfiniteLoader>
-    )
-}
+export const List = ({ items, count, loadItems }:  Props) => (
+    <Autosizer>
+        {({ width, height }) => (
+            <InfiniteLoader
+                isItemLoaded={(index) => !!items[index]}
+                itemCount={count}
+                loadMoreItems={loadItems}
+            >
+                {({ onItemsRendered, ref }) => (
+                    <FixedSizeList
+                        ref={ref}
+                        itemCount={count}
+                        itemSize={48}
+                        height={height}
+                        width={width}
+                        onItemsRendered={onItemsRendered}
+                    >
+                      {Row(items)}
+                    </FixedSizeList>
+                )}
+            </InfiniteLoader>
+        )}
+    </Autosizer>
+)

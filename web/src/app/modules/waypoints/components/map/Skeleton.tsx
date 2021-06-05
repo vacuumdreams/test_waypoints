@@ -2,9 +2,22 @@ import React from 'react'
 import styled from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
 
+type Props = {
+  isLoading: boolean,
+}
+
 const Wrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+
+  transition: opacity 0.5s;
+
+  &[data-loading="false"] {
+      opacity: 0;
+  }
 
   & span {
     display: block;
@@ -14,4 +27,8 @@ const Wrapper = styled.div`
   }
 `
 
-export const MapSkeleton = () => <Wrapper><Skeleton wrapper={Wrapper} /></Wrapper>
+export const MapSkeleton = ({ isLoading }: Props) => (
+    <Wrapper data-loading={isLoading}>
+        <Skeleton wrapper={Wrapper} />
+    </Wrapper>
+)

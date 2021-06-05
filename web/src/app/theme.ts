@@ -1,6 +1,7 @@
 import { mergeDeepRight } from 'ramda'
 
 const base = {
+  mode: 'light',
   radius: 0,
   transition: 0.2,
   fonts:  {
@@ -51,6 +52,7 @@ const base = {
 export const theme = {
   light: base,
   dark: mergeDeepRight(base, {
+    mode: 'dark',
     colors: {
       text: {
         main: '#F8F8F8',

@@ -14,7 +14,7 @@ type Props = {
     loadItems: (startIndex: number, stopIndex: number) => Promise<Waypoint[]>,
 }
 
-const even = (num: number) => num % 2 === 0
+const odd = (num: number) => num % 2 === 1
 
 const Item = styled.div<{ index: number }>`
     display: flex;
@@ -24,7 +24,7 @@ const Item = styled.div<{ index: number }>`
     padding: 0 1rem;
     font-weight: ${path(['theme', 'fonts', 'primary', 'weight', 'bold'])};
 
-    ${p => pathSatisfies(even, ['index'], p)
+    ${p => pathSatisfies(odd, ['index'], p)
     ? `background-color: ${path(['theme', 'colors', 'neutral', 'weak'], p)};`
     : ''
     }

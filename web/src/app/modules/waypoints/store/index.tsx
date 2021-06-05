@@ -1,5 +1,5 @@
+import React, { createContext, useReducer, useContext, useCallback } from 'react'
 import produce from 'immer'
-import { useReducer } from 'react'
 import { insertAll, remove } from 'ramda'
 import { WaypointService, Waypoint } from  '../../../../services/client'
 
@@ -44,6 +44,16 @@ const initialState: State = {
         error: null,
     },
 }
+
+type ListGet = (query: { page: number, size?: number }) => Promise<Waypoint[]>
+type ItemSave = (waypoint: Waypoint) => Promise<Waypoint>
+const noop = (m: any) => m
+
+export const WaypointsContext = createContext({
+  state: initialState,
+  getWaypoints: noop as ListGet,
+  saveWaypoint: noop as ItemSave,
+})
 
 const addReplaceItems = (items: Waypoint[], newItems: Waypoint[], page: number, size: number) => {
     const start = (page - 1) * size
@@ -95,10 +105,10 @@ function reducer (state: State, action: Action) {
   }
 }
 
-export const useWaypoints = () => {
+export const WaypointsProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const getWaypoints = async ({ page, size = 20 }) => {
+    const getWaypoints = useCallback(async ({ page, size = 20 }) => {
         dispatch({ type: ActionMap.GET_LIST })
         return WaypointService.list({ page, size })
             .then(waypoints => {
@@ -109,9 +119,9 @@ export const useWaypoints = () => {
               dispatch({ type: ActionMap.GET_LIST_FAILURE, payload: { page, data: error.message} })
               return state.list.data
             })
-    }
+    }, [])
 
-    const saveWaypoint = async (waypoint: Waypoint): Promise<Waypoint> => {
+    const saveWaypoint = useCallback(async (waypoint: Waypoint): Promise<Waypoint> => {
         dispatch({ type: ActionMap.SAVE_ITEM })
         return WaypointService.create({ requestBody: waypoint })
             .then(waypoint => {
@@ -122,11 +132,15 @@ export const useWaypoints = () => {
               dispatch({ type: ActionMap.SAVE_ITEM_FAILURE, payload: { data: error.message } })
               return null
             })
-    }
+    }, [])
 
-    return {
-        state,
-        getWaypoints,
-        saveWaypoint,
-    }
+    return (
+        <WaypointsContext.Provider value={{ state, getWaypoints, saveWaypoint }}>
+            {children}
+        </WaypointsContext.Provider>
+    )
+}
+
+export const useWaypoints = () => {
+    return useContext(WaypointsContext)
 }

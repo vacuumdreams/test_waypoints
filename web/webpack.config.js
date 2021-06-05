@@ -57,7 +57,7 @@ module.exports = {
         exclude: /node_modules/,
         options: {
           loader: 'tsx',
-          target: 'es2015'
+          target: 'es2018'
        }
       },
     ],

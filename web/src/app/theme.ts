@@ -29,9 +29,11 @@ const base = {
   colors: {
     text: {
       main: '#252525',
+      weak: '#686868',
     },
     background: {
       main: '#FFFFFF',
+      contrast: '#121212',
     },
     neutral: {
       main: '#686868',
@@ -55,6 +57,7 @@ export const theme = {
       },
       background: {
         main: '#121212',
+        contrast: '#FFFFFF',
       },
       neutral: {
         weak: '#424242',

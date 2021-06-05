@@ -3,10 +3,9 @@ import { path } from 'ramda'
 import styled from 'styled-components'
 
 import type { ConfigType } from '../../config'
-import { Button } from  '../../../atoms'
-import { Title, Map, List, ListContainer } from './components'
+import { Divider } from  '../../../atoms'
+import { Title, Map, MapSkeleton, Add, List, ListContainer } from './components'
 
-import { useMap } from  '../../../services/map/useMap'
 import { useWaypoints } from './store'
 
 type Props = {
@@ -30,24 +29,16 @@ const Box = styled.div`
     overflow: hidden;
 `
 
-const Divider = styled.hr`
-    width: 100%;
-    height: 1px;
-    margin: 1rem 0;
-    background-color: ${path(['theme', 'colors', 'neutral', 'main'])};
-    border: none;
-`
-
 const ButtonWrap = styled.div`
     padding: 0 1rem;
 `
 
 export const Waypoints = ({ config }: Props) => {
-  const { ref } = useMap(config.mapbox)
   const { state, getWaypoints } = useWaypoints()
+
   const isLoading = state.list.loading || state.item.loading
 
-  const getNextPageOnEnd = useCallback((end) => {
+  const onScrollEnd = useCallback((end) => {
       if (end > state.list.data.length) {
         return getWaypoints({ page: state.list.page + 1 })
       }
@@ -63,12 +54,12 @@ export const Waypoints = ({ config }: Props) => {
           <Box>
               <ListContainer>
                   <ButtonWrap>
-                      <Button disabled={isLoading} aria-disabled={isLoading}>Add new</Button>
+                      <Add isLoading={isLoading} />
                   </ButtonWrap>
                   <Divider />
-                  <List items={state.list.data} count={1000} loadItems={(_, end) => getNextPageOnEnd(end)} />
+                  <List items={state.list.data} count={1000} loadItems={(_, end) => onScrollEnd(end)} />
               </ListContainer>
-              <Map ref={ref} />
+              {isLoading ? <MapSkeleton /> : <Map config={config.mapbox} />}
           </Box>
       </Container>
   )

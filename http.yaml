@@ -36,7 +36,7 @@ paths:
             application/json:
               schema:
                 type: array
-                maxItems: 20
+                maxItems: 100
                 x-count: 20
                 items:
                   $ref: '#/components/schemas/Waypoint'
@@ -84,7 +84,6 @@ components:
           format: float
           minimum: -90
           maximum: 90
-          pattern: '((\-?|\+?)?\d+(\.\d+)?)'
           x-faker: address.latitude
           example: 52.504680
         longitude:
@@ -92,7 +91,6 @@ components:
           format: float
           minimum: -180
           maximum: 180
-          pattern: '((\-?|\+?)?\d+(\.\d+)?)'
           x-faker: address.longitude
           example: 13.329780
         name:

@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const { spawn } = require('child_process')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
 const MODE = process.env.NODE_ENV === 'development' ? 'development' : 'production'
 const OUT_DIR = process.env.NODE_ENV === 'development' ? 'sandbox' : 'build'
@@ -9,6 +10,19 @@ const DEV_TOOL = process.env.NODE_ENV === 'development' ? 'inline-source-map' : 
 
 const sandboxApiPath = path.join(__dirname, 'sandbox', 'api.js')
 const cutomPackageEntry = path.join(__dirname, 'sandbox', 'entry.tsx')
+
+const devPlugins = [
+  new HtmlWebpackPlugin({ template: path.join(__dirname, 'index.html') }),
+]
+
+const prodPlugins = [
+  new CopyPlugin({
+    patterns: [
+      { from: path.join(__dirname, 'server.js'), to: '.' },
+      { from: path.join(__dirname, 'index.html'), to: '.' },
+    ],
+  }),
+]
 
 const devConfig = process.env.NODE_ENV !== 'development' ? {} : {
   watchOptions: {
@@ -45,10 +59,10 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: '/',
   },
-  externals: {
+  externals: MODE  === 'production' ? {
     'react': 'React',
     'react-dom': 'ReactDOM',
-  },
+  } : undefined,
   module: {
     rules: [
       {
@@ -62,9 +76,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new HtmlWebpackPlugin({ template: path.join(__dirname, 'index.html') }),
-  ],
+  plugins: MODE === 'production' ? prodPlugins : devPlugins,
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },

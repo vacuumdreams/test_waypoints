@@ -44,7 +44,7 @@ export const useMap = ({ token, mode, markerColor }: Props) => {
               return acc
           }, { addedNames: [...names], bounds: [] })
 
-          setNames(names.concat(addedNames))
+          setNames(addedNames)
           mapRef.current.fitBounds(bounds)
         }
     }, [isLoading, names.length])
@@ -73,6 +73,12 @@ export const useMap = ({ token, mode, markerColor }: Props) => {
             },
         }))
     }, [])
+
+    useEffect(() => {
+        if (mapRef.current && modeMap[mode]) {
+            mapRef.current.setStyle(modeMap[mode]);
+        }
+    }, [mode])
 
     return {
         isLoading: isLoading,

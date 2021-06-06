@@ -1,7 +1,7 @@
 import { pathOr } from 'ramda'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
-export const buttonCss = css`
+export const Button = styled.button`
     font-size: 1rem;
     padding: 1rem;
     background-color: ${pathOr('', ['theme', 'colors', 'primary', 'main'])};
@@ -22,8 +22,4 @@ export const buttonCss = css`
     &:hover {
         background-color: ${pathOr('', ['theme', 'colors', 'primary', 'weak'])};
     }
-`
-
-export const Button = styled.button`
-    ${buttonCss}
 `

@@ -32,6 +32,12 @@ type Action = { type: ActionMap.GET_LIST }
     | { type: ActionMap.SAVE_ITEM_SUCCESS, payload: { data: Waypoint } }
     | { type: ActionMap.SAVE_ITEM_FAILURE, payload: { data: string } }
 
+type ContextType = {
+    state: State,
+    getWaypoints: (p: { page: number, size?: number }) => Promise<Waypoint[]>,
+    saveWaypoint: (w: Waypoint) => Promise<Waypoint>,
+}
+
 const initialState: State = {
     list: {
         loading: false,
@@ -45,15 +51,7 @@ const initialState: State = {
     },
 }
 
-type ListGet = (query: { page: number, size?: number }) => Promise<Waypoint[]>
-type ItemSave = (waypoint: Waypoint) => Promise<Waypoint>
-const noop = (m: any) => m
-
-export const WaypointsContext = createContext({
-  state: initialState,
-  getWaypoints: noop as ListGet,
-  saveWaypoint: noop as ItemSave,
-})
+export const WaypointsContext = createContext({} as ContextType)
 
 const addReplaceItems = (items: Waypoint[], newItems: Waypoint[], page: number, size: number) => {
     const start = (page - 1) * size
@@ -112,12 +110,12 @@ export const WaypointsProvider = ({ children }) => {
         dispatch({ type: ActionMap.GET_LIST })
         return WaypointService.list({ page, size })
             .then(waypoints => {
-              dispatch({ type: ActionMap.GET_LIST_SUCCESS, payload: { page, size, data: waypoints } })
-              return waypoints
+                dispatch({ type: ActionMap.GET_LIST_SUCCESS, payload: { page, size, data: waypoints } })
+                return waypoints
             })
             .catch(error => {
-              dispatch({ type: ActionMap.GET_LIST_FAILURE, payload: { page, data: error.message} })
-              return state.list.data
+                dispatch({ type: ActionMap.GET_LIST_FAILURE, payload: { page, data: error.message} })
+                return state.list.data
             })
     }, [])
 
@@ -125,12 +123,12 @@ export const WaypointsProvider = ({ children }) => {
         dispatch({ type: ActionMap.SAVE_ITEM })
         return WaypointService.create({ requestBody: waypoint })
             .then(waypoint => {
-              dispatch({ type: ActionMap.SAVE_ITEM_SUCCESS, payload: { data: waypoint } })
-              return waypoint
+                dispatch({ type: ActionMap.SAVE_ITEM_SUCCESS, payload: { data: waypoint } })
+                return waypoint
             })
             .catch(error => {
-              dispatch({ type: ActionMap.SAVE_ITEM_FAILURE, payload: { data: error.message } })
-              return null
+                dispatch({ type: ActionMap.SAVE_ITEM_FAILURE, payload: { data: error.message } })
+                return null
             })
     }, [])
 

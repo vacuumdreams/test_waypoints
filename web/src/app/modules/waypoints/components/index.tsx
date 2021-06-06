@@ -1,9 +1,9 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { path } from 'ramda'
 import styled from 'styled-components'
 
 import type { ConfigType } from '../../../config'
-import { Divider } from  '../../../../atoms'
+import { Blur, Divider } from  '../../../../atoms'
 
 import { Title } from './title/Title'
 import { Map } from './map/Map'
@@ -38,11 +38,12 @@ const ButtonWrap = styled.div`
     padding: 0 1rem;
 `
 
-const ListWrap = styled.div`
+const ListWrap = styled(Blur)`
     flex: 1 1 auto;
 `
 
 export const WaypointsComponent = ({ config }: Props) => {
+  const [isSearchOpen, setSearchOpen] = useState(false)
   const { state, getWaypoints } = useWaypoints()
 
   const isLoading = state.list.loading || state.item.loading
@@ -63,10 +64,10 @@ export const WaypointsComponent = ({ config }: Props) => {
           <Box>
               <ListContainer>
                   <ButtonWrap>
-                      <Add isLoading={isLoading} />
+                      <Add isLoading={isLoading} config={config.mapbox} setSearchOpen={setSearchOpen} />
                   </ButtonWrap>
                   <Divider />
-                  <ListWrap>
+                  <ListWrap data-blur={isSearchOpen || isLoading}>
                     <List items={state.list.data} count={1000} loadItems={(_, end) => onScrollEnd(end)} />
                   </ListWrap>
               </ListContainer>

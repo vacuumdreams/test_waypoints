@@ -4,6 +4,7 @@ import styled, { ThemeContext } from 'styled-components'
 import { Transition } from 'react-transition-group'
 
 import type { ConfigType } from '../../../../config'
+import { Blur } from '../../../../../atoms'
 import { MapSkeleton } from './Skeleton'
 
 import { useMap } from  '../../../../../services/map/useMap'
@@ -18,12 +19,12 @@ const MapComponent = styled.div`
   width: 100%;
 `
 
-const MapContainer = styled.div`
-    position: relative;
-    flex: 1;
-    height: 100%;
-    width: 100%;
-    border: 3px solid ${path(['theme', 'colors', 'neutral', 'main'])};
+const MapContainer = styled(Blur)`
+  position: relative;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  border: 3px solid ${path(['theme', 'colors', 'neutral', 'main'])};
 `
 
 export const Map = ({ config }: Props) => {
@@ -38,13 +39,13 @@ export const Map = ({ config }: Props) => {
     }, [isLoading, state.list.loading, state.list.data.length])
 
     return (
-        <Transition in={isLoading || state.list.loading} timeout={500}>
-            {transitionState => (
-                <MapContainer>
-                    <MapComponent ref={ref} />
-                    {['exiting', 'entered', 'entering'].includes(transitionState) && <MapSkeleton isLoading={transitionState === 'entered'} />}
-                </MapContainer>
-            )}
-        </Transition>
+        <MapContainer data-blur={isLoading}>
+            <MapComponent ref={ref} />
+            <Transition in={isLoading || state.list.loading} timeout={500}>
+                {transitionState => (
+                  ['exiting', 'entered', 'entering'].includes(transitionState) && <MapSkeleton isLoading={transitionState === 'entered'} />
+                )}
+            </Transition>
+        </MapContainer>
     )
 }

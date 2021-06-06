@@ -16,10 +16,10 @@ const devPlugins = [
 ]
 
 const prodPlugins = [
+  new HtmlWebpackPlugin({ template: path.join(__dirname, 'index.html') }),
   new CopyPlugin({
     patterns: [
       { from: path.join(__dirname, 'server.js'), to: '.' },
-      { from: path.join(__dirname, 'index.html'), to: '.' },
     ],
   }),
 ]

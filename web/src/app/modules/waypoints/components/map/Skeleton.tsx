@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
 
-  transition: opacity 0.5s;
+  transition: 0.5s opacity;
 
   &[data-loading="false"] {
       opacity: 0;

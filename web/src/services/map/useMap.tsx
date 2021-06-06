@@ -25,7 +25,7 @@ export const useMap = ({ token, mode, markerColor }: Props) => {
     const [lat, setLat] = useState(0)
     const [zoom, setZoom] = useState(8)
 
-    const addMarkers = useCallback((waypoints: Waypoint[]) => {
+    const addMarkers = (waypoints: Waypoint[]) => {
         if (!isLoading) {
           const { addedNames, bounds } = waypoints.reduce((acc, item) => {
               if (!acc.bounds[0] || (acc.bounds[0][0] > item.longitude && acc.bounds[0][1] > item.latitude)) {
@@ -47,9 +47,10 @@ export const useMap = ({ token, mode, markerColor }: Props) => {
           setNames(addedNames)
           mapRef.current.fitBounds(bounds)
         }
-    }, [isLoading, names.length])
+    }
 
     useEffect(() => {
+        console.log('init')
         mapboxgl.accessToken = token
 
         mapRef.current = new mapboxgl.Map({
@@ -67,11 +68,10 @@ export const useMap = ({ token, mode, markerColor }: Props) => {
             setLoading(false)
         })
 
-        mapRef.current.addControl(new mapboxgl.GeolocateControl({
-            positionOptions: {
-                enableHighAccuracy: true
-            },
-        }))
+        return () => {
+            mapRef.current.remove()
+            mapRef.current = null
+        }
     }, [])
 
     useEffect(() => {

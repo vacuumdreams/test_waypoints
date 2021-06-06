@@ -43,8 +43,8 @@ const base = {
     },
     primary: {
       main: '#027F99',
-      weak: '#B9D9DF',
-      strong: '#1C4F59',
+      weak: '#029EBD',
+      strong: '#236370',
     },
   },
 }
@@ -64,10 +64,6 @@ export const theme = {
       neutral: {
         weak: '#424242',
         strong: '#e2e2e2',
-      },
-      primary: {
-        weak: '#1C4F59',
-        strong: '#B9D9DF',
       },
     },
   }) as typeof base,

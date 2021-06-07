@@ -26,7 +26,7 @@ export const useMap = ({ token, mode, markerColor }: Props) => {
     const [zoom, setZoom] = useState(8)
 
     const addMarkers = (waypoints: SavedWaypoint[]) => {
-        if (!isLoading) {
+        if (mapRef.current && waypoints.length) {
           const { addedNames, bounds } = waypoints.reduce((acc, item) => {
               const currentLat = parseFloat(item.latitude.toString())
               const currentLng = parseFloat(item.longitude.toString())
@@ -90,7 +90,7 @@ export const useMap = ({ token, mode, markerColor }: Props) => {
     }, [mode])
 
     return {
-        isLoading: isLoading,
+        isLoading,
         ref,
         mapRef,
         lng,

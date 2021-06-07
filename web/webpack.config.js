@@ -62,6 +62,7 @@ module.exports = {
   externals: MODE  === 'production' ? {
     'react': 'React',
     'react-dom': 'ReactDOM',
+    'mapboxgl': 'mapboxgl',
   } : undefined,
   module: {
     rules: [

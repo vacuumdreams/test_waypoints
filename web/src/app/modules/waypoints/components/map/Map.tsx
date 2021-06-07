@@ -33,9 +33,7 @@ export const Map = ({ config }: Props) => {
     const { state } = useWaypoints()
 
     useEffect(() => {
-        if (!isLoading && !state.list.loading && state.list.data.length) {
-            addMarkers(state.list.order.map(id => state.list.data[id]))
-        }
+        addMarkers(state.list.order.map(id => state.list.data[id]))
     }, [state.list.order.join()])
 
     return (

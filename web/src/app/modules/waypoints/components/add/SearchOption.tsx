@@ -11,12 +11,13 @@ export type SearchOptionProps = {
 }
 
 const SaveButton = styled(Button)`
-    font-size: 0.8rem;
+    font-size: 1rem;
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
     right: 0;
+    transform: translateY(-50%);
     width: 3rem;
+    height: 3rem;
     transition: ${path(['theme', 'transition'])}s opacity;
 
     &[data-highlight="false"] {

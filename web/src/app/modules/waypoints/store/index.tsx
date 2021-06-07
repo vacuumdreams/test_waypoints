@@ -1,12 +1,16 @@
 import React, { createContext, useReducer, useContext, useCallback } from 'react'
+import { compose, map, indexBy, sortBy, prop } from 'ramda'
 import produce from 'immer'
-import { WaypointService, Waypoint } from  '../../../../services/client'
+import { WaypointService, Waypoint, SavedWaypoint } from  '../../../../services/client'
 import { getUser } from  '../../../../services/storage/user'
 
 enum ActionMap {
     GET_LIST = 'getList',
     GET_LIST_SUCCESS = 'getListSuccess',
     GET_LIST_FAILURE = 'getListFailure',
+    UPDATE_ORDER = 'updateOrder',
+    UPDATE_ORDER_SUCCESS = 'updateOrderSuccess',
+    UPDATE_ORDER_FAILURE = 'updateOrderFailure',
     SAVE_ITEM = 'saveItem',
     SAVE_ITEM_SUCCESS = 'saveItemSuccess',
     SAVE_ITEM_FAILURE = 'saveItemFailure',
@@ -16,7 +20,10 @@ type State = {
     list: {
         loading: boolean,
         error: null | string,
-        data: Waypoint[],
+        order: string[],
+        data: {
+          [key: string]: SavedWaypoint,
+        },
     },
     item: {
         loading: boolean,
@@ -25,29 +32,41 @@ type State = {
 }
 
 type Action = { type: ActionMap.GET_LIST }
-    | { type: ActionMap.GET_LIST_SUCCESS, payload: Waypoint[] }
-    | { type: ActionMap.GET_LIST_FAILURE, payload: string }
+    | { type: ActionMap.GET_LIST_SUCCESS, payload: SavedWaypoint[] }
+    | { type: ActionMap.GET_LIST_FAILURE, payload: { message: string } }
+    | { type: ActionMap.UPDATE_ORDER, payload: { next: string[] } }
+    | { type: ActionMap.UPDATE_ORDER_SUCCESS }
+    | { type: ActionMap.UPDATE_ORDER_FAILURE, payload: { message: string, prev: string[] } }
     | { type: ActionMap.SAVE_ITEM }
-    | { type: ActionMap.SAVE_ITEM_SUCCESS, payload: Waypoint }
-    | { type: ActionMap.SAVE_ITEM_FAILURE, payload: string }
+    | { type: ActionMap.SAVE_ITEM_SUCCESS, payload: SavedWaypoint }
+    | { type: ActionMap.SAVE_ITEM_FAILURE, payload: { message: string } }
 
 type ContextType = {
     state: State,
-    getWaypoints: () => Promise<Waypoint[]>,
-    saveWaypoint: (w: Waypoint) => Promise<Waypoint>,
+    getWaypoints: () => void,
+    updateWaypointsOrder: (order: string[]) => void,
+    saveWaypoint: (waypoint: Waypoint) => void,
 }
 
 const initialState: State = {
     list: {
         loading: false,
         error: null,
-        data: [],
+        order: [],
+        data: {},
     },
     item: {
         loading: false,
         error: null,
     },
 }
+
+const getOrder = compose(
+    map(prop('id')),
+    sortBy(prop('id')),
+)
+
+const getData = (waypoints: SavedWaypoint[]) => indexBy(prop('id'), waypoints)
 
 export const WaypointsContext = createContext({} as ContextType)
 
@@ -62,15 +81,37 @@ function reducer (state: State, action: Action) {
     case ActionMap.GET_LIST_SUCCESS: {
         return produce(state, nextState => {
             nextState.list.loading = false
-            nextState.list.data = action.payload
+            nextState.list.order = getOrder(action.payload)
+            nextState.list.data = getData(action.payload)
         })
     }
     case ActionMap.GET_LIST_FAILURE: {
         return produce(state, nextState => {
             nextState.list.loading = true
-            nextState.list.error = action.payload
+            nextState.list.error = action.payload.message
         })
     }
+
+    case ActionMap.UPDATE_ORDER: {
+        return produce(state, nextState => {
+            nextState.list.loading = true
+            nextState.list.error = null
+            nextState.list.order = action.payload.next
+        })
+    }
+    case ActionMap.UPDATE_ORDER_SUCCESS: {
+        return produce(state, nextState => {
+            nextState.list.loading = false
+        })
+    }
+    case ActionMap.UPDATE_ORDER_FAILURE: {
+        return produce(state, nextState => {
+            nextState.list.loading = false
+            nextState.list.error = action.payload.message
+            nextState.list.order = action.payload.prev
+        })
+    }
+
     case ActionMap.SAVE_ITEM: {
         return produce(state, nextState => {
             nextState.item.loading = true
@@ -80,13 +121,17 @@ function reducer (state: State, action: Action) {
     case ActionMap.SAVE_ITEM_SUCCESS: {
         return produce(state, nextState => {
             nextState.item.loading = false
-            nextState.list.data = [action.payload, ...state.list.data]
+            nextState.list.order.push(action.payload.id)
+            nextState.list.data = {
+              ...state.list.data,
+              [action.payload.id]: action.payload,
+            }
         })
     }
     case ActionMap.SAVE_ITEM_FAILURE: {
         return produce(state, nextState => {
             nextState.item.loading = false
-            nextState.item.error = action.payload
+            nextState.item.error = action.payload.message
         })
     }
 
@@ -104,29 +149,37 @@ export const WaypointsProvider = ({ children }) => {
         return WaypointService.list({ user })
             .then(waypoints => {
                 dispatch({ type: ActionMap.GET_LIST_SUCCESS, payload: waypoints })
-                return waypoints
             })
             .catch(error => {
                 dispatch({ type: ActionMap.GET_LIST_FAILURE, payload: error.message })
-                return state.list.data
             })
     }, [])
 
-    const saveWaypoint = useCallback(async (waypoint: Waypoint): Promise<Waypoint> => {
+    const updateWaypointsOrder = useCallback(async (newOrder: string[]) => {
+        const startingOrder = state.list.order
+        dispatch({ type: ActionMap.UPDATE_ORDER, payload: { next: newOrder } })
+        return WaypointService.updateOrder({ user, requestBody: newOrder.map((id, i) => ({ id, order: i })) })
+            .then(() => {
+                dispatch({ type: ActionMap.UPDATE_ORDER_SUCCESS })
+            })
+            .catch(error => {
+                dispatch({ type: ActionMap.UPDATE_ORDER_FAILURE, payload: { prev: startingOrder, message: error.message } })
+            })
+    }, [])
+
+    const saveWaypoint = useCallback(async (waypoint: Waypoint) => {
         dispatch({ type: ActionMap.SAVE_ITEM })
-        return WaypointService.create({ requestBody: waypoint })
+        return WaypointService.create({ user, requestBody: waypoint })
             .then(waypoint => {
                 dispatch({ type: ActionMap.SAVE_ITEM_SUCCESS, payload: waypoint })
-                return waypoint
             })
             .catch(error => {
                 dispatch({ type: ActionMap.SAVE_ITEM_FAILURE, payload: error.message })
-                return null
             })
     }, [])
 
     return (
-        <WaypointsContext.Provider value={{ state, getWaypoints, saveWaypoint }}>
+        <WaypointsContext.Provider value={{ state, getWaypoints, updateWaypointsOrder, saveWaypoint }}>
             {children}
         </WaypointsContext.Provider>
     )

@@ -22,7 +22,7 @@ paths:
             example: 'testId'
       responses:
         '200':
-          description: A JSON array of waypoints
+          description: A collection of waypoints.
           content:
             application/json:
               schema:
@@ -30,7 +30,45 @@ paths:
                 maxItems: 10
                 x-count: 3
                 items:
-                  $ref: '#/components/schemas/Waypoint'
+                  $ref: '#/components/schemas/SavedWaypoint'
+    put:
+      tags:
+        - waypoint
+      summary: Updates waypoint order.
+      operationId: updateOrder
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+            example: 'testId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              maxItems: 10
+              items:
+                $ref: '#/components/schemas/WaypointOrder'
+      responses:
+        '200':
+          description: Returns the list of saved waypoints.
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 10
+                x-count: 3
+                items:
+                  $ref: '#/components/schemas/WaypointOrder'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /waypoint/{user}:
     post:
       tags:
@@ -52,13 +90,13 @@ paths:
               $ref: '#/components/schemas/Waypoint'
       responses:
         '200':
-          description: A JSON array of waypoints
+          description: The created waypoint.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Waypoint'
+                $ref: '#/components/schemas/SavedWaypoint'
         '400':
-          description: Invalid request
+          description: Invalid request.
           content:
             application/json:
               schema:
@@ -83,15 +121,28 @@ components:
           minimum: -90
           maximum: 90
           x-faker: address.latitude
-          example: 52.504680
         longitude:
           type: number
           format: float
           minimum: -180
           maximum: 180
           x-faker: address.longitude
-          example: 13.329780
         name:
           type: string
           x-faker: '{{address.streetAddress}}, {{address.zipCode}} {{address.cityName}}, {{address.country}}'
-          example: 'Kurfürstendamm 22, 10719 Berlin, Germany'
+    WaypointOrder:
+      type: object
+      required:
+        - id
+        - order
+      properties:
+        id:
+          type: string
+          x-faker: 'random.uuid'
+        order:
+          type: number
+          x-faker: 'random.number({ "min": 0, "max": 9 })'
+    SavedWaypoint:
+      allOf:
+        - $ref: '#/components/schemas/Waypoint'
+        - $ref: '#/components/schemas/WaypointOrder'

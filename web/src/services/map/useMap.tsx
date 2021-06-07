@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import mapboxgl from 'mapbox-gl'
 
 import { Waypoint } from '../client'
@@ -28,17 +28,27 @@ export const useMap = ({ token, mode, markerColor }: Props) => {
     const addMarkers = (waypoints: Waypoint[]) => {
         if (!isLoading) {
           const { addedNames, bounds } = waypoints.reduce((acc, item) => {
-              if (!acc.bounds[0] || (acc.bounds[0][0] > item.longitude && acc.bounds[0][1] > item.latitude)) {
-                  acc.bounds[0] = [item.longitude - 0.001, item.latitude - 0.001]
+              const currentLat = parseFloat(item.latitude.toString())
+              const currentLng = parseFloat(item.longitude.toString())
+
+              if (!acc.bounds[0]) {
+                  acc.bounds[0] = [currentLng - 0.001, currentLat - 0.001]
+              } else {
+                  acc.bounds[0][0] = acc.bounds[0][0] > currentLng ? currentLng - 0.001 : acc.bounds[0][0]
+                  acc.bounds[0][1] = acc.bounds[0][1] > currentLat ? currentLat - 0.001 : acc.bounds[0][1]
               }
-              if (!acc.bounds[1] || (acc.bounds[1][0] < item.longitude && acc.bounds[1][1] < item.latitude)) {
-                  acc.bounds[1] = [item.longitude + 0.001, item.latitude + 0.001]
+
+              if (!acc.bounds[1]) {
+                  acc.bounds[1] = [currentLng - 0.001, currentLat - 0.001]
+              } else {
+                  acc.bounds[1][0] = acc.bounds[1][0] < currentLng ? currentLng + 0.001 : acc.bounds[1][0]
+                  acc.bounds[1][1] = acc.bounds[1][1] < currentLat ? currentLat + 0.001 : acc.bounds[1][1]
               }
 
               if (!acc.addedNames.includes(item.name)) {
                   acc.addedNames.push(item.name)
                   new mapboxgl.Marker({ color: markerColor })
-                      .setLngLat([item.longitude, item.latitude])
+                      .setLngLat([currentLng, currentLat])
                       .addTo(mapRef.current)
               }
               return acc

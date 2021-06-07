@@ -14,7 +14,7 @@ import { Directions } from './list/Directions'
 import { useWaypoints } from '../store'
 
 type Props = {
-  config: ConfigType,
+    config: ConfigType,
 }
 
 const Container = styled.div`
@@ -38,13 +38,9 @@ const ButtonWrap = styled.div`
     padding: 0 1rem;
 `
 
-const ListWrap = styled(Blur)`
-    flex: 1 1 auto;
-`
-
 export const WaypointsComponent = ({ config }: Props) => {
   const [isSearchOpen, setSearchOpen] = useState(false)
-  const { state, getWaypoints } = useWaypoints()
+  const { state, getWaypoints, updateWaypointsOrder } = useWaypoints()
 
   const isLoading = state.list.loading || state.item.loading
 
@@ -61,9 +57,9 @@ export const WaypointsComponent = ({ config }: Props) => {
                       <Add isLoading={isLoading} config={config.mapbox} setSearchOpen={setSearchOpen} />
                   </ButtonWrap>
                   <Divider />
-                  <ListWrap data-blur={isSearchOpen || isLoading}>
-                    <Directions items={state.list.data} />
-                  </ListWrap>
+                  <Blur data-blur={isSearchOpen || isLoading}>
+                      <Directions isLoading={isLoading} items={state.list.data} order={state.list.order} setOrder={updateWaypointsOrder} />
+                  </Blur>
               </ListContainer>
               <Map config={config.mapbox} />
           </Box>

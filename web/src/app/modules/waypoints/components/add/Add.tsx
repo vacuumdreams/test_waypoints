@@ -1,16 +1,20 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { path } from 'ramda'
 import styled from 'styled-components'
+import { Transition } from 'react-transition-group'
 import { debounce } from 'throttle-debounce'
-import { useCombobox } from 'downshift'
 
-import { Button } from '../../../../../atoms'
-import type { ConfigType } from '../../../../config'
+import { Autocomplete } from '../../../../../atoms'
+import { SearchOption } from './SearchOption'
+import { AddButton } from './AddButton'
+
+import type { SearchOptionProps } from './SearchOption'
 import type { Waypoint } from '../../../../../services/client'
-import { InputButton } from  './InputButton'
+import type { ConfigType } from '../../../../config'
 
 import { useSearch } from '../../../../../services/map/useSearch'
 import { useWaypoints } from '../../store'
+import { useClickAway } from '../../../../../services/ui/useClickAway'
 
 type Props = {
     isLoading: boolean,
@@ -18,39 +22,19 @@ type Props = {
     setSearchOpen: (value: boolean) => void;
 }
 
-const Wrapper = styled.div`
+const TransitionWrap = styled.div`
     position: relative;
 `
 
-const SearchList = styled.div`
-    position: absolute;
-    top: 3rem;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    background-color: ${path(['theme', 'colors', 'background', 'main'])};
-    border: 3px solid ${path(['theme', 'colors', 'neutral', 'main'])};
-    border-top: none;
-`
-
-const SearchItem = styled.div`
-    position: relative;
-    font-size: 1rem;
-
-    & span {
-      padding: 1rem;
-    }
-
-    & ${Button} {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
-`
-export const Add = ({ isLoading, config, setSearchOpen }: Props) => {
+export const Add = ({ config, isLoading, setSearchOpen }: Props) => {
+    const inputRef = useRef(null)
+    const [isAdding, setAdding] = useState(false)
     const [searchList, setSearchList] = useState<Waypoint[]>([])
     const { searchForPlace } = useSearch(config)
     const { saveWaypoint } = useWaypoints()
+    useClickAway(inputRef, () => setAdding(false))
+
+    const label = "Add new place"
 
     const onChangeHandler = debounce(400, false, ({ inputValue }) => {
         searchForPlace(inputValue)
@@ -64,49 +48,36 @@ export const Add = ({ isLoading, config, setSearchOpen }: Props) => {
           })
     })
 
-    const {
-      isOpen,
-      getMenuProps,
-      getInputProps,
-      getComboboxProps,
-      highlightedIndex,
-      getItemProps,
-    } = useCombobox({
-        items: searchList,
-        itemToString: path(['name']),
-        onInputValueChange: onChangeHandler,
-    })
-
-    const inputProps = getInputProps({
-      onBlur: () => {
-        setSearchOpen(false)
-      }
-    })
+    const onOptionAddClick = (item: Waypoint) => saveWaypoint(item)
 
     return (
-        <form role="search" aria-label="Saved waypoints">
-            <Wrapper {...getComboboxProps()}>
-                <InputButton
-                    placeholder="Add new  place"
-                    inputProps={inputProps}
-                    isDisabled={isLoading}
-                />
-                <SearchList {...getMenuProps()}>
-                    {isOpen && searchList.map((item, index) => (
-                        <SearchItem
-                          key={`${item.name}${index}`}
-                          {...getItemProps({item, index})}
-                        >
-                          <span>{item.name}</span>
-                          <div>
-                              {highlightedIndex === index && (
-                                  <Button onClick={() => saveWaypoint(item)}>Add</Button>
-                              )}
-                          </div>
-                        </SearchItem>
-                    ))}
-                </SearchList>
-            </Wrapper>
-        </form>
+        <Transition in={isAdding} timeout={300}>
+            {(state) => (
+                <TransitionWrap data-state={state}>
+                    <Autocomplete<Waypoint, SearchOptionProps>
+                        items={searchList}
+                        placeholder={state === 'entered' ? label : ''}
+                        onChange={onChangeHandler}
+                        onOpenChange={setSearchOpen}
+                        itemToString={path<string>(['name'])}
+                        disabled={isLoading}
+                        inputRef={inputRef}
+                        optionProps={{ onAddClick: onOptionAddClick }}
+                        Option={SearchOption}
+                    />
+                    <AddButton
+                        disabled={isLoading}
+                        onClick={() => {
+                          setAdding(true)
+                          if (inputRef.current) {
+                              inputRef.current.focus()
+                          }
+                        }}
+                    >
+                        <span>{label}</span>
+                    </AddButton>
+                </TransitionWrap>
+            )}
+        </Transition>
     )
 }

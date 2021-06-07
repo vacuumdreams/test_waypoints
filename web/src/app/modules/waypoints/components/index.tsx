@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { path } from 'ramda'
 import styled from 'styled-components'
 
@@ -9,7 +9,7 @@ import { Title } from './title/Title'
 import { Map } from './map/Map'
 import { Add } from './add/Add'
 import { ListContainer } from './list/Container'
-import { List } from './list/List'
+import { Directions } from './list/Directions'
 
 import { useWaypoints } from '../store'
 
@@ -48,14 +48,8 @@ export const WaypointsComponent = ({ config }: Props) => {
 
   const isLoading = state.list.loading || state.item.loading
 
-  const onScrollEnd = useCallback((end) => {
-      if (end > state.list.data.length) {
-        return getWaypoints({ page: state.list.page + 1 })
-      }
-  }, [state.list.data.length])
-
   useEffect(() => {
-      getWaypoints({ page: 1 })
+      getWaypoints()
   }, [])
 
   return (
@@ -68,7 +62,7 @@ export const WaypointsComponent = ({ config }: Props) => {
                   </ButtonWrap>
                   <Divider />
                   <ListWrap data-blur={isSearchOpen || isLoading}>
-                    <List items={state.list.data} count={1000} loadItems={(_, end) => onScrollEnd(end)} />
+                    <Directions items={state.list.data} />
                   </ListWrap>
               </ListContainer>
               <Map config={config.mapbox} />

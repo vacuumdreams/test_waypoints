@@ -9,7 +9,6 @@ export const $Waypoint = {
             format: 'float',
             maximum: 90,
             minimum: -90,
-            pattern: '((\\-?|\\+?)?\\d+(\\.\\d+)?)',
         },
         longitude: {
             type: 'number',
@@ -17,7 +16,6 @@ export const $Waypoint = {
             format: 'float',
             maximum: 180,
             minimum: -180,
-            pattern: '((\\-?|\\+?)?\\d+(\\.\\d+)?)',
         },
         name: {
             type: 'string',

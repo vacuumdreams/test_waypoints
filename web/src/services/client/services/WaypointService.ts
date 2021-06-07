@@ -12,19 +12,13 @@ export class WaypointService {
      * @throws ApiError
      */
     public static async list({
-        page,
-        size,
+        user,
     }: {
-        page?: number,
-        size?: number,
+        user?: string,
     }): Promise<Array<Waypoint>> {
         const result = await __request({
             method: 'GET',
-            path: `/waypoints`,
-            query: {
-                'page': page,
-                'size': size,
-            },
+            path: `/waypoints/${user}/`,
         });
         return result.body;
     }
@@ -36,12 +30,14 @@ export class WaypointService {
      */
     public static async create({
         requestBody,
+        user,
     }: {
         requestBody: Waypoint,
+        user?: string,
     }): Promise<Waypoint> {
         const result = await __request({
             method: 'POST',
-            path: `/waypoint`,
+            path: `/waypoint/${user}/`,
             body: requestBody,
             errors: {
                 400: `Invalid request`,

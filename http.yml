@@ -7,28 +7,19 @@ servers:
   - url: http://localhost:8001/api/v1
     description: Local server url
 paths:
-  /waypoints:
+  /waypoints/{user}:
     get:
       tags:
         - waypoint
       summary: Returns the list of saved waypoints.
       operationId: list
       parameters:
-        - in: query
-          name: page
-          required: false
+        - in: path
+          name: user
+          required: true
           schema:
-            type: integer
-            minimum: 1
-            example: 1
-        - in: query
-          name: size
-          required: false
-          schema:
-            type: integer
-            minimum: 5
-            maximum: 100
-            example: 20
+            type: string
+            example: 'testId'
       responses:
         '200':
           description: A JSON array of waypoints
@@ -36,16 +27,23 @@ paths:
             application/json:
               schema:
                 type: array
-                maxItems: 100
-                x-count: 20
+                maxItems: 10
+                x-count: 3
                 items:
                   $ref: '#/components/schemas/Waypoint'
-  /waypoint:
+  /waypoint/{user}:
     post:
       tags:
         - waypoint
       summary: Saves a waypoint.
       operationId: create
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+            example: 'testId'
       requestBody:
         required: true
         content:

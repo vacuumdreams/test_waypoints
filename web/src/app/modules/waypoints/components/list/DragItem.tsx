@@ -16,17 +16,18 @@ const MarkerWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    color:  ${path(['theme', 'colors', 'primary', 'main'])};
-    margin-right: 1rem;
+    color: ${path(['theme', 'colors', 'primary', 'main'])};
     background: #fff;
     border-radius: 50%;
     border: 3px solid ${path(['theme', 'colors', 'primary', 'main'])};
-    width: 1.8rem;
-    height: 1.8rem;
+    width: 26px;
+    height: 26px;
 `
 
 const DirectionItem = styled.div`
-    display: flex;
+    display: grid;
+    grid-template-columns: calc(26px + 1rem) auto;
+
     padding: 1rem;
     transition: ${path(['theme', 'transition'])}s opacity, ${path(['theme', 'transition'])}s background-color;
 
@@ -67,7 +68,7 @@ export  const DragItem = ({ item, index }: Props) => (
                   <MarkerWrap>
                       <Marker size={12} />
                   </MarkerWrap>
-                  {item.name}
+                  <span>{item.name}</span>
               </DirectionItem>
             </Item>
           )

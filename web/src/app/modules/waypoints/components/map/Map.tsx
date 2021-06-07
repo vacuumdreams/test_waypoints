@@ -34,9 +34,9 @@ export const Map = ({ config }: Props) => {
 
     useEffect(() => {
         if (!isLoading && !state.list.loading && state.list.data.length) {
-            addMarkers(state.list.data)
+            addMarkers(state.list.order.map(id => state.list.data[id]))
         }
-    }, [isLoading, state.list.loading, state.list.data.length])
+    }, [state.list.order.join()])
 
     return (
         <MapContainer data-blur={isLoading}>

@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import mapboxgl from 'mapbox-gl'
 
-import { Waypoint } from '../client'
+import { SavedWaypoint } from '../client'
 
 const modeMap = {
     light: 'mapbox://styles/mapbox/light-v10',
@@ -25,7 +25,7 @@ export const useMap = ({ token, mode, markerColor }: Props) => {
     const [lat, setLat] = useState(0)
     const [zoom, setZoom] = useState(8)
 
-    const addMarkers = (waypoints: Waypoint[]) => {
+    const addMarkers = (waypoints: SavedWaypoint[]) => {
         if (!isLoading) {
           const { addedNames, bounds } = waypoints.reduce((acc, item) => {
               const currentLat = parseFloat(item.latitude.toString())
@@ -60,7 +60,6 @@ export const useMap = ({ token, mode, markerColor }: Props) => {
     }
 
     useEffect(() => {
-        console.log('init')
         mapboxgl.accessToken = token
 
         mapRef.current = new mapboxgl.Map({

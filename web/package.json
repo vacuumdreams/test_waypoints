@@ -12,6 +12,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development webpack serve",
+    "sandbox": "NODE_ENV=development WEBPACK_ENV=sandbox webpack serve",
     "generate:client": "openapi --input ../http.yml --output ./src/services/client --useUnionTypes --useOptions --exportSchemas true",
     "build": "webpack build",
     "serve": "node build/server.js",

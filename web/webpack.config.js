@@ -7,6 +7,7 @@ const CopyPlugin = require('copy-webpack-plugin')
 const MODE = process.env.NODE_ENV === 'development' ? 'development' : 'production'
 const OUT_DIR = process.env.NODE_ENV === 'development' ? 'sandbox' : 'build'
 const DEV_TOOL = process.env.NODE_ENV === 'development' ? 'inline-source-map' : 'hidden-source-map'
+const hasSandbox = process.env.WEBPACK_ENV === 'sandbox'
 
 const sandboxApiPath = path.join(__dirname, 'sandbox', 'api.js')
 const cutomPackageEntry = path.join(__dirname, 'sandbox', 'entry.tsx')
@@ -39,6 +40,9 @@ const devConfig = process.env.NODE_ENV !== 'development' ? {} : {
     },
     serveIndex: true,
     before: async () => {
+        if (!hasSandbox) {
+            return
+        }
         if (fs.existsSync(sandboxApiPath)) {
             console.log('Starting up sandbox servers...')
             const sandboxApi = require(sandboxApiPath);

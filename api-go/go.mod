@@ -8,5 +8,4 @@ require (
 	github.com/getkin/kin-openapi v0.63.0
 	github.com/go-chi/chi/v5 v5.0.3
 	github.com/jackc/pgx/v4 v4.11.0
-	github.com/paulmach/orb v0.2.2
 )

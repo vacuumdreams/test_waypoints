@@ -20,6 +20,7 @@ waypoint_id INT,
 user_id VARCHAR(120) NOT NULL,
 order_id SMALLINT NOT NULL,
 PRIMARY KEY(id),
+UNIQUE(waypoint_id),
 CONSTRAINT fk_waypoints
    FOREIGN KEY(waypoint_id)
    REFERENCES waypoints(id)

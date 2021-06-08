@@ -2,7 +2,7 @@ package db
 
 import (
 	"errors"
-  "github.com/cridenour/go-postgis"
+	"github.com/cridenour/go-postgis"
 )
 
 type Point struct {

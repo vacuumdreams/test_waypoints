@@ -1,8 +1,8 @@
 package server
 
 import (
-  "fmt"
 	"encoding/json"
+	"fmt"
 	api "github.com/vacuumdreams/waypoints/api"
 	db "github.com/vacuumdreams/waypoints/db"
 	"net/http"
@@ -32,8 +32,8 @@ func (s Store) List(w http.ResponseWriter, r *http.Request, user string) {
 	list, err := s.DB.GetList(user)
 
 	if err != nil {
-    fmt.Println(fmt.Sprintf("Error retrieving waypoint list: %v", err))
-    sendError(w, http.StatusInternalServerError, "Cannot get waypoint list")
+		fmt.Println(fmt.Sprintf("Error retrieving waypoint list: %v", err))
+		sendError(w, http.StatusInternalServerError, "Cannot get waypoint list")
 		return
 	}
 
@@ -42,38 +42,51 @@ func (s Store) List(w http.ResponseWriter, r *http.Request, user string) {
 }
 
 func (s Store) Create(w http.ResponseWriter, r *http.Request, user string) {
-  var newItem api.Waypoint
+	var newItem api.Waypoint
 	if err := json.NewDecoder(r.Body).Decode(&newItem); err != nil {
 		sendError(w, http.StatusBadRequest, "Invalid waypoint format")
 		return
 	}
 
-	item, err := s.DB.AddItem(user, newItem)
+	result, err := s.DB.AddItem(user, newItem)
 
-  if err != nil {
-    fmt.Println(fmt.Sprintf("Error saving waypoint: %v", err))
-    sendError(w, http.StatusInternalServerError, "Cannot save waypoint")
-    return
-  }
+	if err != nil {
+		fmt.Println(fmt.Sprintf("Error saving waypoint: %v", err))
+		sendError(w, http.StatusInternalServerError, "Cannot save waypoint")
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(item)
+	json.NewEncoder(w).Encode(result)
 }
 
 func (s Store) Delete(w http.ResponseWriter, r *http.Request, user string, params api.DeleteParams) {
-  err := s.DB.DeleteItem(user, params.Id)
+	err := s.DB.DeleteItem(user, params.Id)
 
-  if err != nil {
-    fmt.Println(fmt.Sprintf("Error deleting waypoint: %v", err))
-    sendError(w, http.StatusInternalServerError, "Cannot delete waypoint")
-    return
-  }
+	if err != nil {
+		fmt.Println(fmt.Sprintf("Error deleting waypoint: %v", err))
+		sendError(w, http.StatusInternalServerError, "Cannot delete waypoint")
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 }
 
 func (s Store) UpdateOrder(w http.ResponseWriter, r *http.Request, user string) {
-	result := "result"
+	var newOrder []api.WaypointOrder
+	if err := json.NewDecoder(r.Body).Decode(&newOrder); err != nil {
+		sendError(w, http.StatusBadRequest, "Invalid waypoint order format")
+		return
+	}
+
+	result, err := s.DB.UpdateOrders(user, newOrder)
+
+	if err != nil {
+		fmt.Println(fmt.Sprintf("Error updating waypoint orders: %v", err))
+		sendError(w, http.StatusInternalServerError, "Cannot update waypoint orders")
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(result)
 }

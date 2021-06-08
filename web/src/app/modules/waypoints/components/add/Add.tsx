@@ -38,17 +38,13 @@ export const Add = ({ config, isLoading, setSearchOpen }: Props) => {
 
     const onChangeHandler = debounce(400, false, ({ inputValue }) => {
         searchForPlace(inputValue)
-          .then(list => {
-              if (list.length) {
-                setSearchOpen(true)
-              } else {
-                setSearchOpen(false)
-              }
-              setSearchList(list)
-          })
+          .then(list => setSearchList(list))
     })
 
-    const onOptionAddClick = (item: Waypoint) => saveWaypoint(item)
+    const onOptionAddClick = (item: Waypoint) => {
+        setSearchOpen(false)
+        saveWaypoint(item)
+    }
 
     return (
         <Transition in={isAdding} timeout={300}>

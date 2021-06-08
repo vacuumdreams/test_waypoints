@@ -73,13 +73,11 @@ export function Autocomplete<T = any, P = any> ({
         items,
         itemToString: itemToString,
         onInputValueChange: onChange,
+        onIsOpenChange: ({ isOpen }) => onOpenChange(isOpen),
     })
 
     const inputProps = getInputProps({
       ref: inputRef,
-      onBlur: () => {
-        onOpenChange(false)
-      }
     })
 
     return (

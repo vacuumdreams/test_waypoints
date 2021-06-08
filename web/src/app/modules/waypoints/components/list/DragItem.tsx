@@ -47,7 +47,7 @@ const Item = styled.div`
 `
 
 export  const DragItem = ({ item, index }: Props) => (
-    <Draggable key={item.id} draggableId={item.id} index={index}>
+    <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
         {(provided, snapshot) => {
           // fix positioning offset
           // ref: https://github.com/atlassian/react-beautiful-dnd/issues/1881

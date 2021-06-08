@@ -2,7 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type WaypointOrder = {
-    id: any;
-    order: number;
-}
+export type Id = number;

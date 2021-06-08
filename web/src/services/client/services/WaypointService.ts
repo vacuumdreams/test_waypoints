@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Id } from '../models/Id';
 import type { SavedWaypoint } from '../models/SavedWaypoint';
 import type { Waypoint } from '../models/Waypoint';
 import type { WaypointOrder } from '../models/WaypointOrder';
@@ -64,6 +65,31 @@ export class WaypointService {
             method: 'POST',
             path: `/waypoint/${user}`,
             body: requestBody,
+            errors: {
+                400: `Invalid request.`,
+            },
+        });
+        return result.body;
+    }
+
+    /**
+     * Deletes a waypoint.
+     * @returns any Empty response when success.
+     * @throws ApiError
+     */
+    public static async delete({
+        user,
+        id,
+    }: {
+        user: string,
+        id: Id,
+    }): Promise<any> {
+        const result = await __request({
+            method: 'DELETE',
+            path: `/waypoint/${user}`,
+            query: {
+                'id': id,
+            },
             errors: {
                 400: `Invalid request.`,
             },

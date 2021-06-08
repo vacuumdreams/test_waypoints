@@ -24,9 +24,6 @@ type Error struct {
 	Message *string `json:"message,omitempty"`
 }
 
-// Id defines model for Id.
-type Id uint64
-
 // SavedWaypoint defines model for SavedWaypoint.
 type SavedWaypoint struct {
 	// Embedded struct due to allOf(#/components/schemas/Waypoint)
@@ -43,13 +40,13 @@ type Waypoint struct {
 
 // WaypointOrder defines model for WaypointOrder.
 type WaypointOrder struct {
-	Id    interface{} `json:"id"`
-	Order uint8       `json:"order"`
+	Id    uint64 `json:"id"`
+	Order uint8  `json:"order"`
 }
 
 // DeleteParams defines parameters for Delete.
 type DeleteParams struct {
-	Id Id `json:"id"`
+	Id uint64 `json:"id"`
 }
 
 // CreateJSONBody defines parameters for Create.
@@ -265,21 +262,21 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

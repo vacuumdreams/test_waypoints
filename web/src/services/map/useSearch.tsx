@@ -30,8 +30,10 @@ export const useSearch = ({ token }: Props) => {
                 setLoading(false)
                 return res.features.map((feature) => ({
                   name: feature.place_name,
-                  latitude: feature.geometry.coordinates[1],
-                  longitude: feature.geometry.coordinates[0],
+                  coordinates: {
+                    X: feature.geometry.coordinates[0],
+                    Y: feature.geometry.coordinates[0],
+                  },
                 }))
             })
             .catch(err => {

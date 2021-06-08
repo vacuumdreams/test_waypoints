@@ -28,8 +28,8 @@ export const useMap = ({ token, mode, markerColor }: Props) => {
     const addMarkers = (waypoints: SavedWaypoint[]) => {
         if (mapRef.current && waypoints.length) {
           const { addedNames, bounds } = waypoints.reduce((acc, item) => {
-              const currentLat = parseFloat(item.latitude.toString())
-              const currentLng = parseFloat(item.longitude.toString())
+              const currentLat = parseFloat(item.coordinates.Y.toString())
+              const currentLng = parseFloat(item.coordinates.X.toString())
 
               if (!acc.bounds[0]) {
                   acc.bounds[0] = [currentLng - 0.001, currentLat - 0.001]

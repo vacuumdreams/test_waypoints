@@ -116,8 +116,10 @@ paths:
         - in: query
           name: id
           required: true
-          type: number
-          x-go-type: 'uint64'
+          schema:
+            type: number
+            example: 'testId'
+            x-go-type: 'uint64'
       responses:
         '200':
           description: Empty response when success.

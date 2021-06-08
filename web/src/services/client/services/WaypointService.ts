@@ -81,7 +81,7 @@ export class WaypointService {
         id,
     }: {
         user: string,
-        id: any,
+        id: number,
     }): Promise<any> {
         const result = await __request({
             method: 'DELETE',

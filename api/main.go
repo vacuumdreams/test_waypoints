@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strconv"
+	"strings"
 	"flag"
 	"fmt"
 	"log"
@@ -15,24 +17,34 @@ import (
 	server "github.com/vacuumdreams/waypoints/server"
 )
 
-func main() {
-	var port = flag.Int("port", 8080, "Port for test HTTP server")
-	flag.Parse()
+func parseURL (url string) (int, string) {
+	chunks := strings.Split(url, ":")
+	chunks = strings.Split(chunks[2], "/")
+	port, err := strconv.Atoi(chunks[0])
 
+	if err  !=  nil {
+		port =  8080
+	}
+
+	return port, "/" + strings.Join(chunks[1:], "/")
+}
+
+func main() {
 	swagger, err := api.GetSwagger()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading swagger spec\n: %s", err)
 		os.Exit(1)
 	}
 
-	// Clear out the servers array in the swagger spec, that skips validating
-	// that server names match. We don't know how this thing will be run.
-	swagger.Servers = nil
+	port_number, base_url := parseURL(swagger.Servers[0].URL)
+
+	var port = flag.Int("port", port_number, "Port for test HTTP server")
+	flag.Parse()
 
 	db_user, db_password, db_name :=
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB")
+		os.Getenv("POSTGRES_USER"),
+		os.Getenv("POSTGRES_PASSWORD"),
+		os.Getenv("POSTGRES_DB")
 
 	database, err := db.Initialize(db_user, db_password, db_name)
 	if err != nil {
@@ -52,13 +64,13 @@ func main() {
 	r.Use(middleware.OapiRequestValidator(swagger))
 
 	// We now register our server as the handler for the interface
-	api.HandlerFromMux(s, r)
+	api.HandlerFromMuxWithBaseURL(s, r, base_url)
 
-	app := &http.Server{
+	waypoints_api := &http.Server{
 		Handler: r,
 		Addr:    fmt.Sprintf("0.0.0.0:%d", *port),
 	}
 
 	// And we serve HTTP until the world ends.
-	log.Fatal(app.ListenAndServe())
+	log.Fatal(waypoints_api.ListenAndServe())
 }

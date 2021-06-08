@@ -12,7 +12,7 @@ Alternatively, you can just run `docker-compose up` in the root of the repositor
 #### Local setup
 
 ```
-go install
+go mod download
 
 migrate -database ${DB_URI} -path db/migrations up
 

@@ -11,19 +11,22 @@ import (
 func (db Database) GetList(userId string) ([]api.SavedWaypoint, error) {
 	results := make([]api.SavedWaypoint, 0, 10)
 	query := `
-  SELECT id, waypoints.user_id, name, coordinates, order_id AS order
-  FROM waypoints INNER JOIN waypoints_order
-  ON waypoints.user_id = waypoints_order.user_id
-  WHERE waypoints.user_id = $1 AND waypoints.id = waypoints_orders.waypoint_id;
-  `
+	SELECT waypoints.id, name, coordinates, order_id
+	FROM waypoints
+	LEFT JOIN waypoints_order
+	ON waypoints.id = waypoints_order.waypoint_id
+	WHERE waypoints.user_id = $1
+	`
 
 	rows, err := db.Conn.Query(context.Background(), query, userId)
+	var coordinates Point
 	if err != nil {
 		return results, err
 	}
 	for rows.Next() {
 		var item api.SavedWaypoint
-		err := rows.Scan(&item.Id, &item.Name, &item.Order, &item.Coordinates)
+		err := rows.Scan(&item.Id, &item.Name, &coordinates, &item.Order)
+		item.Coordinates = coordinates.Point
 		if err != nil {
 			return results, err
 		}

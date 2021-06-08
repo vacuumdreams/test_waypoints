@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS waypoints_order;
+DROP TABLE IF EXISTS waypoints;
+
+DROP EXTENSION IF EXISTS postgis_topology;
+DROP EXTENSION IF EXISTS postgis_raster;
+DROP EXTENSION IF EXISTS postgis;

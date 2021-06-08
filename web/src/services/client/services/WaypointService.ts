@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Id } from '../models/Id';
 import type { SavedWaypoint } from '../models/SavedWaypoint';
 import type { Waypoint } from '../models/Waypoint';
 import type { WaypointOrder } from '../models/WaypointOrder';
@@ -82,7 +81,7 @@ export class WaypointService {
         id,
     }: {
         user: string,
-        id: Id,
+        id: any,
     }): Promise<any> {
         const result = await __request({
             method: 'DELETE',

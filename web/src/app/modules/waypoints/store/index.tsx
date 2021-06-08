@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, useCallback } from 'react'
 
-import { WaypointService, Waypoint } from  '../../../../services/client'
+import { WaypointService, Waypoint, Id } from  '../../../../services/client'
 import { getUser } from  '../../../../services/storage/user'
 
 import { initialState, State } from './state'

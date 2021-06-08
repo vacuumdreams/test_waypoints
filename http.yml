@@ -116,8 +116,8 @@ paths:
         - in: query
           name: id
           required: true
-          schema:
-            $ref: '#/components/schemas/Id'
+          type: number
+          x-go-type: 'uint64'
       responses:
         '200':
           description: Empty response when success.
@@ -134,10 +134,6 @@ components:
       properties:
         message:
           type: string
-    Id:
-      type: number
-      x-faker: 'random.number({ "min": 0, "max": 99 })'
-      x-go-type: 'uint64'
     Waypoint:
       type: object
       required:
@@ -170,8 +166,9 @@ components:
         - order
       properties:
         id:
-          schema:
-            $ref: '#/components/schemas/Id'
+          type: number
+          x-faker: 'random.number({ "min": 0, "max": 99 })'
+          x-go-type: 'uint64'
         order:
           type: number
           x-go-type: 'uint8'

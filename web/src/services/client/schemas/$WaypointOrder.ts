@@ -4,8 +4,7 @@
 export const $WaypointOrder = {
     properties: {
         id: {
-            properties: {
-            },
+            type: 'number',
             isRequired: true,
         },
         order: {

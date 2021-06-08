@@ -3,6 +3,6 @@
 /* eslint-disable */
 
 export type WaypointOrder = {
-    id: any;
+    id: number;
     order: number;
 }

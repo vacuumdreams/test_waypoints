@@ -57,7 +57,7 @@ func (db Database) AddItem(userId string, item api.Waypoint) (*api.SavedWaypoint
 	return result, err
 }
 
-func (db Database) DeleteItem(userId string, itemId api.Id) error {
+func (db Database) DeleteItem(userId string, itemId uint64) error {
 	query := `
   DELETE FROM waypoints
   WHERE id IN (

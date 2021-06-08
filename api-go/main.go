@@ -9,7 +9,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	api "github.com/vacuumdreams/waypoints/api-go/api"
+  db "github.com/vacuumdreams/waypoints/db"
+	api "github.com/vacuumdreams/waypoints/api"
+	server "github.com/vacuumdreams/waypoints/server"
 	middleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
 )
 
@@ -27,8 +29,20 @@ func main() {
 	// that server names match. We don't know how this thing will be run.
 	swagger.Servers = nil
 
+  db_user, db_password, db_name :=
+      os.Getenv("DB_USER"),
+      os.Getenv("DB_PASSWORD"),
+      os.Getenv("DB")
+
+  database, err := db.Initialize(db_user, db_password, db_name)
+  if err != nil {
+    fmt.Fprintf(os.Stderr, "Error connecting to database\n: %s", err)
+    os.Exit(1)
+  }
+  defer database.Conn.Close()
+
 	// Create an instance of our handler which satisfies the generated interface
-	petStore := api.NewPetStore()
+	s := server.NewStore(database)
 
 	// This is how you set up a basic chi router
 	r := chi.NewRouter()
@@ -37,14 +51,14 @@ func main() {
 	// OpenAPI schema.
 	r.Use(middleware.OapiRequestValidator(swagger))
 
-	// We now register our petStore above as the handler for the interface
-	api.HandlerFromMux(petStore, r)
+	// We now register our server as the handler for the interface
+	api.HandlerFromMux(s, r)
 
-	s := &http.Server{
+	app := &http.Server{
 		Handler: r,
 		Addr:    fmt.Sprintf("0.0.0.0:%d", *port),
 	}
 
 	// And we serve HTTP until the world ends.
-	log.Fatal(s.ListenAndServe())
+	log.Fatal(app.ListenAndServe())
 }

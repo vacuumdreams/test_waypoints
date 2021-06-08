@@ -9,10 +9,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-  db "github.com/vacuumdreams/waypoints/db"
-	api "github.com/vacuumdreams/waypoints/api"
-	server "github.com/vacuumdreams/waypoints/server"
 	middleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
+	api "github.com/vacuumdreams/waypoints/api"
+	db "github.com/vacuumdreams/waypoints/db"
+	server "github.com/vacuumdreams/waypoints/server"
 )
 
 func main() {
@@ -29,17 +29,17 @@ func main() {
 	// that server names match. We don't know how this thing will be run.
 	swagger.Servers = nil
 
-  db_user, db_password, db_name :=
-      os.Getenv("DB_USER"),
-      os.Getenv("DB_PASSWORD"),
-      os.Getenv("DB")
+	db_user, db_password, db_name :=
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB")
 
-  database, err := db.Initialize(db_user, db_password, db_name)
-  if err != nil {
-    fmt.Fprintf(os.Stderr, "Error connecting to database\n: %s", err)
-    os.Exit(1)
-  }
-  defer database.Conn.Close()
+	database, err := db.Initialize(db_user, db_password, db_name)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error connecting to database\n: %s", err)
+		os.Exit(1)
+	}
+	defer database.Conn.Close()
 
 	// Create an instance of our handler which satisfies the generated interface
 	s := server.NewStore(database)

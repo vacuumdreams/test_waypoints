@@ -1,40 +1,40 @@
 package db
 
 import (
-    "context"
-    "fmt"
-    "log"
-    "github.com/jackc/pgx/v4/pgxpool"
+	"context"
+	"fmt"
+	"github.com/jackc/pgx/v4/pgxpool"
+	"log"
 )
 
 const (
-    HOST = "localhost"
-    PORT = "5432"
+	HOST = "localhost"
+	PORT = "5432"
 )
+
 // ErrNoMatch is returned when we request a row that doesn't exist
 var ErrNoMatch = fmt.Errorf("no matching record")
 
 type Database struct {
-    Conn *pgxpool.Pool
+	Conn *pgxpool.Pool
 }
 
 func Initialize(username, password, database string) (Database, error) {
-    db := Database{}
+	db := Database{}
 
-    db_uri := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
-        username, password, HOST, PORT, database)
+	db_uri := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
+		username, password, HOST, PORT, database)
 
-    conn, err := pgxpool.Connect(context.Background(), db_uri)
-    if err != nil {
-        return db, err
-    }
-    db.Conn = conn
-    err = db.Conn.Ping(context.Background())
+	conn, err := pgxpool.Connect(context.Background(), db_uri)
+	if err != nil {
+		return db, err
+	}
+	db.Conn = conn
+	err = db.Conn.Ping(context.Background())
 
-
-    if err != nil {
-        return db, err
-    }
-    log.Println("Database connection established")
-    return db, nil
+	if err != nil {
+		return db, err
+	}
+	log.Println("Database connection established")
+	return db, nil
 }

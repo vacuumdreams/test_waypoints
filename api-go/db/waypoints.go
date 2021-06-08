@@ -54,12 +54,14 @@ func (db Database) AddItem(userId string, item api.Waypoint) (*api.SavedWaypoint
 	return result, err
 }
 
-func (db Database) DeleteItem(itemId int) error {
+func (db Database) DeleteItem(userId string, itemId api.Id) error {
 	query := `
-    DELETE FROM waypoints WHERE id = $1
-    DELETE FROM waypoints_order WHERE waypoint_id = $1;
+    DELETE FROM waypoints
+    WHERE id IN (
+      SELECT id FROM waypoints WHERE user_id = $1 AND id = $2
+    )
     `
-	_, err := db.Conn.Exec(context.Background(), query, itemId)
+	_, err := db.Conn.Exec(context.Background(), query, userId, itemId)
 	return err
 }
 

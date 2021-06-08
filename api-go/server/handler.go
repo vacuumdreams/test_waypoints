@@ -60,10 +60,16 @@ func (s Store) Create(w http.ResponseWriter, r *http.Request, user string) {
 	json.NewEncoder(w).Encode(item)
 }
 
-func (s Store) Delete(w http.ResponseWriter, r *http.Request, user string) {
-	result := "result"
+func (s Store) Delete(w http.ResponseWriter, r *http.Request, user string, params api.DeleteParams) {
+  err := s.DB.DeleteItem(user, params.Id)
+
+  if err != nil {
+    fmt.Println(fmt.Sprintf("Error deleting waypoint: %v", err))
+    sendError(w, http.StatusInternalServerError, "Cannot delete waypoint")
+    return
+  }
+
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(result)
 }
 
 func (s Store) UpdateOrder(w http.ResponseWriter, r *http.Request, user string) {

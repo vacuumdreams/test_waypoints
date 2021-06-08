@@ -24,6 +24,9 @@ type Error struct {
 	Message *string `json:"message,omitempty"`
 }
 
+// Id defines model for Id.
+type Id uint64
+
 // SavedWaypoint defines model for SavedWaypoint.
 type SavedWaypoint struct {
 	// Embedded struct due to allOf(#/components/schemas/Waypoint)
@@ -40,8 +43,13 @@ type Waypoint struct {
 
 // WaypointOrder defines model for WaypointOrder.
 type WaypointOrder struct {
-	Id    uint64 `json:"id"`
-	Order uint8  `json:"order"`
+	Id    interface{} `json:"id"`
+	Order uint8       `json:"order"`
+}
+
+// DeleteParams defines parameters for Delete.
+type DeleteParams struct {
+	Id Id `json:"id"`
 }
 
 // CreateJSONBody defines parameters for Create.
@@ -60,7 +68,7 @@ type UpdateOrderJSONRequestBody UpdateOrderJSONBody
 type ServerInterface interface {
 	// Deletes a waypoint.
 	// (DELETE /waypoint/{user})
-	Delete(w http.ResponseWriter, r *http.Request, user string)
+	Delete(w http.ResponseWriter, r *http.Request, user string, params DeleteParams)
 	// Saves a waypoint.
 	// (POST /waypoint/{user})
 	Create(w http.ResponseWriter, r *http.Request, user string)
@@ -95,8 +103,25 @@ func (siw *ServerInterfaceWrapper) Delete(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params DeleteParams
+
+	// ------------- Required query parameter "id" -------------
+	if paramValue := r.URL.Query().Get("id"); paramValue != "" {
+
+	} else {
+		http.Error(w, "Query argument id is required, but not found", http.StatusBadRequest)
+		return
+	}
+
+	err = runtime.BindQueryParameter("form", true, true, "id", r.URL.Query(), &params.Id)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Invalid format for parameter id: %s", err), http.StatusBadRequest)
+		return
+	}
+
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.Delete(w, r, user)
+		siw.Handler.Delete(w, r, user, params)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -240,21 +265,21 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/9RWS4/bNhD+K8S0hxbQWnYTFLu6bdMcDARN0AdaINkDI45lpuKj5MhZ19B/L4aSbclW",
-	"ti66bbcXga/RfPN9M0PuoHTGO4uWIhQ7iOUajUzDlyG4wAMfnMdAGtOywRhlhTykrUcoIFLQtoK2zfYr",
-	"7v0HLAnaDH6QG1Q/y6132hLbyLp+vYLi7Q4+D7iCAj7Ljwjy3n1+sGizyw6+DgoDtHdtBkNvY+ilc0Fp",
-	"K6mbjjd/4c/KBSMJCljVThJkYOS9No2BYnE9z8Bo282u0rSP1jbmPQbI4P5qJX/FAAVIpQLGOKudrTQ1",
-	"CpkLCg0+7ORm5OPmMheSeg9n/PPxyl31i95FqnScvemJBSvNhIxDH7vd3kukgEi33axtM3Hc+l37F05h",
-	"2w7WSk3b76TB8cnSNZbCtm0T1oC/NTqgguLtSJke2N1ENo3VPpNQq0E4E5QFaZUzs27ni514x2S/g0LM",
-	"Mx7Lex7f3Ij2yxPqGm3p6+eMwO09/10v006uz5jRCvZezxnhw9quHANSGMugPWlnoTgwJSK5ICsUlYsY",
-	"NgkqaapxeOb2zRIy2GCInfFiNp/NU7QerfQaCniWljLwktaJ6/xjb53vmoih7SDUSCmlWBXJUJYKCvi2",
-	"W2frIA0Shpg6gGZn/Me95gXwv2DIABdN1rcl/jPeS+MTfMJIS2bntA3dsX30zsYuLb6az88Jemk8bcX+",
-	"nPi4RitiU5acpxz6886odJaw71ze17pMUeUfIv9kN8D1UJPqOmlSawxiaTey1kpwuBhpltSPjTEybA+8",
-	"RSHFnuwZhysrpg/2a8BNj4v7nPgXAeW/TXyK5Bunto9G3/EyGBcHI2yntX4Uv+O7a0K+H9coykSxGij0",
-	"RJKH0V+QOm12LOU4qOUKJ/LplY70X5fxxaRqQhP/osbpLl52hovj9StDkNvUrtMVBsWzCT1uRenqGkue",
-	"Crc6EB9PlfkeqQk2ClqjqHUkPhwZx9DkU3XeTMjyk1eSsLsU/we1fpEwJw+7B4X5B/rCo2P8k+S5KCee",
-	"SGfp0i0ekIn0PPlUf2HT9PLo0nHs6ZUrZS26fdGEGjLgbwFrIl/kec37axepuJ7PF7n0Ot8s+Jn/RwAA",
-	"AP//FRNl1rgMAAA=",
+	"H4sIAAAAAAAC/9RXS4/bNhD+K8S0hxbQWnYTFLu6bdMcDARN0AdaINkDI45tphLJcEbOqob+ezGUH1Ls",
+	"3bjINthcDL6GM/N93wzlDZS+Dt6hY4JiA1SusNZp+DxGH2UQog8Y2WJarpFIL1GG3AaEAoijdUvoumy3",
+	"4t++w5Khy2BuBgddU7/FCBncXiz03xihgKid8fWk3/luo95Abd0bKNQ0k7G+lfHVleq+T2ZLf7G9q7GO",
+	"f3wqLn7TazR/6jZ461i86ap6uYDi9Qa+jbiAAr7JD0nm2wzzvUWXnXfwZTQYobvpMhh6G6NTeh+NdZr7",
+	"6XjzL/lZ+FhrhgIWldcMmSRp66aGYnY5zST9fnaRpncjp42JSDSpvFtabgwKFhwbvN/J1cjH1XkuNG89",
+	"HFE8JiV44qWlyastsOB0fUIpQx+bzc4LcUTk637WdZk6bP1jwzNvsOsGa6Xl9hdd4/hk6RvHse26FGvE",
+	"942NaKB4PWJmG9jNCcGO2T6i0JpDlcjoPuHMTQrC72763Co4XQSXR5laAzuvxxnKYesWXgIySGW0ga13",
+	"UOwzV8Q+6iWqpSeM6xQqW65weOb61RwyWGOk3ng2mU6mgp8P6HSwUMCTtJRB0LxK2OUfttb5piGMXR9C",
+	"hZwkIihrCUVaBvzcr4t11DUyRkoVbcWZ3LjjsAC5C4YISBFkA47wVtchhc9IPBd0jjrX9ub3Dcb2cHVC",
+	"8u6LP0n+jVhT8I569fwwnR7j/rwO3KrdOfVhhU5RU5YiZ0H0aW9Uese4bXAhVLZMYOXvSC45V5J9T08i",
+	"GAcxd2tdWaMkWSSeJFFRU9c6tns6SGm143AiKOqlsAK7NZDeKD3gmM9nEfUX5POmt0fin7xpHwy+w5sx",
+	"rjmJsDvN9YP4HT9xJ+j7fYWqTBCbAUOPRDwS/RnS6bJDh6BBi1jiCT29sMRfVk2fQa1lrOk/cpye7Hlv",
+	"ODu80jpG3aZXIL10UDw5wce1Kn1VYSlT5Rd74OljZn5FbqIjxStUlSWWwyRxDE3uqvPmBC1/BKMZ+7fz",
+	"K6j1s4j56PvvXmL+h77w4DF+QjxnaeKRdJZebrSPTKWvnrv6i5imD5pejmNPL3ypK9XvqyZWkIH8FrBi",
+	"DkWeV7K/8sTF5XQ6y3Ww+Xom/wb+DQAA//9vJnG+Qg0AAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

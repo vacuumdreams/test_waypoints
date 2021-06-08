@@ -101,6 +101,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - waypoint
+      summary: Deletes a waypoint.
+      operationId: delete
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+            example: 'testId'
+        - in: query
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Empty response when success.
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Error:
@@ -108,6 +134,10 @@ components:
       properties:
         message:
           type: string
+    Id:
+      type: number
+      x-faker: 'random.number({ "min": 0, "max": 99 })'
+      x-go-type: 'uint64'
     Waypoint:
       type: object
       required:
@@ -140,10 +170,11 @@ components:
         - order
       properties:
         id:
-          type: string
-          x-faker: 'random.uuid'
+          schema:
+            $ref: '#/components/schemas/Id'
         order:
           type: number
+          x-go-type: 'uint8'
           x-faker: 'random.number({ "min": 0, "max": 9 })'
     SavedWaypoint:
       allOf:

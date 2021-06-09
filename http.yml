@@ -3,9 +3,6 @@ info:
   title: Waypoint API
   description: Waypoint storage goserver
   version: 1.0.0
-servers:
-  - url: http://localhost:8001
-    description: Local server url
 paths:
   /api/v1/waypoints/{user}:
     get:

@@ -6,10 +6,12 @@ import { Draggable } from 'react-beautiful-dnd'
 import type { SavedWaypoint } from '../../../../../services/client'
 
 import { Marker } from '../../../../../atoms'
+import { RemoveButton } from  './RemoveButton'
 
 type Props = {
     item: SavedWaypoint,
     index: number,
+    onRemove: (waypoint: SavedWaypoint) => void;
 }
 
 const MarkerWrap = styled.div`
@@ -22,11 +24,12 @@ const MarkerWrap = styled.div`
     border: 3px solid ${path(['theme', 'colors', 'primary', 'main'])};
     width: 26px;
     height: 26px;
+    margin-top: 0.75rem;
 `
 
 const DirectionItem = styled.div`
     display: grid;
-    grid-template-columns: calc(26px + 1rem) auto;
+    grid-template-columns: calc(26px + 1rem) auto 3rem;
 
     padding: 1rem;
     transition: ${path(['theme', 'transition'])}s opacity, ${path(['theme', 'transition'])}s background-color;
@@ -34,6 +37,10 @@ const DirectionItem = styled.div`
     &[data-dragging="true"] {
         opacity: 0.7;
         background-color: ${path(['theme', 'colors', 'neutral', 'weak'])};
+    }
+
+    &:hover ${RemoveButton} {
+        opacity: 0.8;
     }
 `
 
@@ -46,7 +53,12 @@ const Item = styled.div`
 
 `
 
-export  const DragItem = ({ item, index }: Props) => (
+const Name = styled.div`
+    display: flex;
+    align-items: center;
+`
+
+export  const DragItem = ({ item, index, onRemove }: Props) => (
     <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
         {(provided, snapshot) => {
           // fix positioning offset
@@ -68,7 +80,8 @@ export  const DragItem = ({ item, index }: Props) => (
                   <MarkerWrap>
                       <Marker size={12} />
                   </MarkerWrap>
-                  <span>{item.name}</span>
+                  <Name>{item.name}</Name>
+                  <RemoveButton onClick={() => onRemove(item)}>❌</RemoveButton>
               </DirectionItem>
             </Item>
           )

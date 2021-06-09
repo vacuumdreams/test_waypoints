@@ -12,14 +12,19 @@ const getOrder = compose(
 
 const getData = (waypoints: SavedWaypoint[]) => indexBy(prop('id'), waypoints)
 
+const pruneErrors = (state: State) => {
+    state.list.error = false
+    state.item.error = false
+    state.order.error = false
+    state.itemDelete.error = false
+}
+
 export function reducer (state: State, action: Action) {
   switch (action.type) {
     case ActionMap.GET_LIST: {
         return produce(state, nextState => {
             nextState.list.loading = true
-            nextState.list.error = false
-            nextState.item.error = false
-            nextState.order.error = false
+            pruneErrors(nextState)
         })
     }
     case ActionMap.GET_LIST_SUCCESS: {
@@ -39,9 +44,7 @@ export function reducer (state: State, action: Action) {
     case ActionMap.UPDATE_ORDER: {
         return produce(state, nextState => {
             nextState.order.loading = true
-            nextState.list.error = false
-            nextState.item.error = false
-            nextState.order.error = false
+            pruneErrors(nextState)
             nextState.list.order = action.payload.next
         })
     }
@@ -62,9 +65,7 @@ export function reducer (state: State, action: Action) {
     case ActionMap.SAVE_ITEM: {
         return produce(state, nextState => {
             nextState.item.loading = true
-            nextState.list.error = false
-            nextState.item.error = false
-            nextState.order.error = false
+            pruneErrors(nextState)
         })
     }
     case ActionMap.SAVE_ITEM_SUCCESS: {
@@ -86,23 +87,21 @@ export function reducer (state: State, action: Action) {
 
     case ActionMap.DELETE_ITEM: {
         return produce(state, nextState => {
-            nextState.item.loading = true
-            nextState.list.error = false
-            nextState.item.error = false
-            nextState.order.error = false
+            nextState.itemDelete.loading = true
+            pruneErrors(nextState)
         })
     }
     case ActionMap.DELETE_ITEM_SUCCESS: {
         return produce(state, nextState => {
-            nextState.item.loading = false
+            nextState.itemDelete.loading = false
             nextState.list.order.splice(nextState.list.order.indexOf(action.payload.id.toString()), 1)
             delete nextState.list.data[action.payload.id]
         })
     }
     case ActionMap.DELETE_ITEM_FAILURE: {
         return produce(state, nextState => {
-            nextState.item.loading = false
-            nextState.item.error = true
+            nextState.itemDelete.loading = false
+            nextState.itemDelete.error = true
         })
     }
 

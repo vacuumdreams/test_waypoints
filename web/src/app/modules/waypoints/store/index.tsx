@@ -56,13 +56,13 @@ export const WaypointsProvider = ({ children }) => {
     }, [])
 
     const deleteWaypoint = useCallback(async (waypoint: SavedWaypoint) => {
-        dispatch({ type: ActionMap.SAVE_ITEM })
+        dispatch({ type: ActionMap.DELETE_ITEM })
         return WaypointService.delete({ user, id: waypoint.id })
-            .then(waypoint => {
-                dispatch({ type: ActionMap.SAVE_ITEM_SUCCESS, payload: waypoint })
+            .then(() => {
+                dispatch({ type: ActionMap.DELETE_ITEM_SUCCESS, payload: waypoint })
             })
             .catch(error => {
-                dispatch({ type: ActionMap.SAVE_ITEM_FAILURE, payload: error.message })
+                dispatch({ type: ActionMap.DELETE_ITEM_FAILURE, payload: error.message })
             })
     }, [])
 

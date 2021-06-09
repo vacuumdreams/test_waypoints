@@ -41,7 +41,7 @@ const ButtonWrap = styled.div`
 
 export const WaypointsComponent = ({ config }: Props) => {
   const [isSearchOpen, setSearchOpen] = useState(false)
-  const { state, getWaypoints, updateWaypointsOrder } = useWaypoints()
+  const { state, getWaypoints, updateWaypointsOrder, deleteWaypoint } = useWaypoints()
 
   const isLoading = state.list.loading || state.item.loading
 
@@ -74,7 +74,13 @@ export const WaypointsComponent = ({ config }: Props) => {
                       <Message type="info">Go on and add your first waypoint!</Message>
                   )}
                   <Blur data-blur={isSearchOpen || isLoading}>
-                      <Directions isLoading={isLoading || state.order.loading} items={state.list.data} order={state.list.order} setOrder={updateWaypointsOrder} />
+                      <Directions
+                          isLoading={isLoading || state.order.loading}
+                          items={state.list.data}
+                          order={state.list.order}
+                          setOrder={updateWaypointsOrder}
+                          removeItem={deleteWaypoint}
+                      />
                   </Blur>
               </ListContainer>
               <Map config={config.mapbox} />

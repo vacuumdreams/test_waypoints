@@ -14,6 +14,7 @@ type Props = {
       [key: string]: SavedWaypoint,
     },
     setOrder: (order: string[]) => void,
+    removeItem: (waypoint: SavedWaypoint) => void;
 }
 
 const Wrapper = styled.div`
@@ -26,7 +27,7 @@ const Wrapper = styled.div`
     }
 `
 
-export const Directions = ({ isLoading, items, order, setOrder }: Props) => {
+export const Directions = ({ isLoading, items, order, setOrder, removeItem }: Props) => {
     const onDragEnd = (result: DropResult) => {
         if (!isLoading && order.length > 1 && result.source && result.destination) {
             const newOrder = move(result.source.index, result.destination.index, order)
@@ -42,7 +43,7 @@ export const Directions = ({ isLoading, items, order, setOrder }: Props) => {
                 {(provided, snapshot) => (
                     <Wrapper {...provided.droppableProps} ref={provided.innerRef} data-dragging={snapshot.isDraggingOver}>
                         {order.map((id, i) => (
-                            <DragItem key={id} item={items[id]} index={i} />
+                            <DragItem key={id} item={items[id]} index={i} onRemove={removeItem} />
                         ))}
                         {provided.placeholder}
                     </Wrapper>

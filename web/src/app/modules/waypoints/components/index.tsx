@@ -3,7 +3,7 @@ import { path } from 'ramda'
 import styled from 'styled-components'
 
 import type { ConfigType } from '../../../config'
-import { Blur, Divider, ErrorContainer } from  '../../../../atoms'
+import { Blur, Divider, Message } from  '../../../../atoms'
 
 import { Title } from './title/Title'
 import { Map } from './map/Map'
@@ -59,10 +59,16 @@ export const WaypointsComponent = ({ config }: Props) => {
                   </ButtonWrap>
                   <Divider />
                   {!state.item.error && state.list.error && (
-                      <ErrorContainer>Could not load your saved waypoints.</ErrorContainer>
+                      <Message type="error">Could not load your saved waypoints.</Message>
                   )}
                   {state.item.error && (
-                      <ErrorContainer>Could not save save your data.</ErrorContainer>
+                      <Message type="error">Could not save save your data.</Message>
+                  )}
+                  {!state.item.error && !state.list.error && isLoading && (
+                      <Message />
+                  )}
+                  {!state.item.error && !state.list.error && !isLoading && state.list.data.length === 0 && (
+                      <Message type="info">Go on and add your first place!</Message>
                   )}
                   <Blur data-blur={isSearchOpen || isLoading}>
                       <Directions isLoading={isLoading} items={state.list.data} order={state.list.order} setOrder={updateWaypointsOrder} />

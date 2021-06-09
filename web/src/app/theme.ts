@@ -68,7 +68,7 @@ export const theme = {
       },
       background: {
         main: '#121212',
-        dim: '#191919',
+        dim: '#1E1E1E',
         contrast: '#FFFFFF',
       },
       neutral: {

@@ -1,13 +1,14 @@
 -- Enable PostGIS (as of 3.0 contains just geometry/geography)
-CREATE EXTENSION IF NOT EXISTS postgis;
+-- CREATE EXTENSION IF NOT EXISTS postgis;
 -- Enable Topology
-CREATE EXTENSION IF NOT EXISTS postgis_topology;
+-- CREATE EXTENSION IF NOT EXISTS postgis_topology;
 
 CREATE TABLE IF NOT EXISTS waypoints(
 id INT GENERATED ALWAYS AS IDENTITY,
 user_id VARCHAR(120) NOT NULL,
 name VARCHAR(120) NOT NULL,
-coordinates GEOMETRY(Point, 4326) NOT NULL,
+latitude REAL,
+longitude REAL,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY(id)
 );

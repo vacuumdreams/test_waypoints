@@ -11,7 +11,7 @@ import (
 func (db Database) GetList(userId string) ([]api.SavedWaypoint, error) {
 	results := make([]api.SavedWaypoint, 0, 10)
 	query := `
-	SELECT waypoints.id, name, coordinates, order_id
+	SELECT waypoints.id, name, longitude, latitude, order_id
 	FROM waypoints
 	LEFT JOIN waypoints_order
 	ON waypoints.id = waypoints_order.waypoint_id
@@ -19,14 +19,14 @@ func (db Database) GetList(userId string) ([]api.SavedWaypoint, error) {
 	`
 
 	rows, err := db.Conn.Query(context.Background(), query, userId)
-	var coordinates Point
+
 	if err != nil {
 		return results, err
 	}
 	for rows.Next() {
 		var item api.SavedWaypoint
-		err := rows.Scan(&item.Id, &item.Name, &coordinates, &item.Order)
-		item.Coordinates = coordinates.Point
+		err := rows.Scan(&item.Id, &item.Name, &item.Longitude, &item.Latitude, &item.Order)
+
 		if err != nil {
 			return results, err
 		}
@@ -37,13 +37,12 @@ func (db Database) GetList(userId string) ([]api.SavedWaypoint, error) {
 
 func (db Database) AddItem(userId string, item api.Waypoint) (*api.SavedWaypoint, error) {
 	result := &api.SavedWaypoint{}
-	var coordinates Point
 
 	query := `
   WITH op1 AS (
-    INSERT INTO waypoints (user_id, name, coordinates, created_at)
-    VALUES ($1, $2, ST_SetSRID(ST_Point($3, $4), 4326), NOW())
-    RETURNING id, name, coordinates
+    INSERT INTO waypoints (user_id, name, longitude, latitude, created_at)
+    VALUES ($1, $2, $3, $4, NOW())
+    RETURNING id, name, longitude, latitude
   ), op2 AS (
     SELECT COALESCE((SELECT MAX(order_id) FROM waypoints_order WHERE user_id = $1), 0) + 1 AS order
   ), op3 AS (
@@ -54,8 +53,7 @@ func (db Database) AddItem(userId string, item api.Waypoint) (*api.SavedWaypoint
   SELECT * FROM op1, op3;
   `
 
-	err := db.Conn.QueryRow(context.Background(), query, userId, item.Name, item.Coordinates.X, item.Coordinates.Y).Scan(&result.Id, &result.Name, &coordinates, &result.Order)
-	result.Coordinates = coordinates.Point
+	err := db.Conn.QueryRow(context.Background(), query, userId, item.Name, item.Longitude, item.Latitude).Scan(&result.Id, &result.Name, &result.Longitude, &result.Latitude, &result.Order)
 
 	return result, err
 }

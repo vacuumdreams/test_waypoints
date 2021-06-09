@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 
-	middleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
+	// middleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
 	api "github.com/vacuumdreams/waypoints/api"
 	db "github.com/vacuumdreams/waypoints/db"
 	server "github.com/vacuumdreams/waypoints/server"
@@ -50,15 +50,17 @@ func main() {
 
 	// Use our validation middleware to check all requests against the
 	// OpenAPI schema.
-	r.Use(middleware.OapiRequestValidator(swagger))
+	// r.Use(middleware.OapiRequestValidator(swagger))
 
 	r.Use(cors.Handler(cors.Options{
-		// going to allow everything for now for simplicity
-    AllowedOrigins:   []string{"https://*", "http://*"},
-    AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-    AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-    AllowCredentials: false,
-    MaxAge:           300,
+		// going to allow everything for now for simplicity and without a production server
+    AllowedOrigins:     []string{"*"},
+    AllowedMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+    AllowedHeaders:     []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:     []string{"Link", "Access-Control-Allow-Origin"},
+    AllowCredentials:   true,
+		OptionsPassthrough: true,
+    MaxAge:             300,
   }))
 
 	// We now register our server as the handler for the interface

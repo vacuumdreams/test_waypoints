@@ -3,7 +3,7 @@ import { path } from 'ramda'
 import styled from 'styled-components'
 
 import type { ConfigType } from '../../../config'
-import { Blur, Divider } from  '../../../../atoms'
+import { Blur, Divider, ErrorContainer } from  '../../../../atoms'
 
 import { Title } from './title/Title'
 import { Map } from './map/Map'
@@ -43,6 +43,7 @@ export const WaypointsComponent = ({ config }: Props) => {
   const { state, getWaypoints, updateWaypointsOrder } = useWaypoints()
 
   const isLoading = state.list.loading || state.item.loading
+  console.log(state.item.error)
 
   useEffect(() => {
       getWaypoints()
@@ -57,6 +58,12 @@ export const WaypointsComponent = ({ config }: Props) => {
                       <Add isLoading={isLoading} config={config.mapbox} setSearchOpen={setSearchOpen} />
                   </ButtonWrap>
                   <Divider />
+                  {!state.item.error && state.list.error && (
+                      <ErrorContainer>Could not load your saved waypoints.</ErrorContainer>
+                  )}
+                  {state.item.error && (
+                      <ErrorContainer>Could not save save your data.</ErrorContainer>
+                  )}
                   <Blur data-blur={isSearchOpen || isLoading}>
                       <Directions isLoading={isLoading} items={state.list.data} order={state.list.order} setOrder={updateWaypointsOrder} />
                   </Blur>

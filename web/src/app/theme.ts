@@ -28,12 +28,14 @@ const base = {
     },
   },
   colors: {
+    transparent: 'rgba(255,255,255,0)',
     text: {
       main: '#252525',
       weak: '#686868',
     },
     background: {
       main: '#FFFFFF',
+      dim: '#F8F8F8',
       contrast: '#121212',
     },
     neutral: {
@@ -46,6 +48,12 @@ const base = {
       weak: '#029EBD',
       strong: '#236370',
     },
+    danger: {
+      main: '#FC5735',
+    },
+    warning:  {
+      main: '#FCB203',
+    }
   },
 }
 
@@ -54,11 +62,13 @@ export const theme = {
   dark: mergeDeepRight(base, {
     mode: 'dark',
     colors: {
+      transparent: 'rgba(0,0,0,0)',
       text: {
         main: '#F8F8F8',
       },
       background: {
         main: '#121212',
+        dim: '#191919',
         contrast: '#FFFFFF',
       },
       neutral: {

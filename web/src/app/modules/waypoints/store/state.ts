@@ -3,7 +3,7 @@ import { SavedWaypoint } from '../../../../services/client'
 export type State = {
     list: {
         loading: boolean,
-        error: null | string,
+        error: boolean,
         order: string[],
         data: {
           [key: string]: SavedWaypoint,
@@ -11,19 +11,19 @@ export type State = {
     },
     item: {
         loading: boolean,
-        error: null | string,
+        error: boolean,
     },
 }
 
 export const initialState: State = {
     list: {
         loading: false,
-        error: null,
+        error: false,
         order: [],
         data: {},
     },
     item: {
         loading: false,
-        error: null,
+        error: false,
     },
 }

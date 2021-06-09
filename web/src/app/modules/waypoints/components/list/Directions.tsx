@@ -17,11 +17,11 @@ type Props = {
 }
 
 const Wrapper = styled.div`
-    border: 2px dashed rgba(0,0,0,0);
+    border: 2px dashed ${path(['theme', 'colors', 'transparent'])};
     transition: ${path(['theme', 'transition'])}s background-color, ${path(['theme', 'transition'])}s border-color;
 
     &[data-dragging="true"] {
-        background-color: rgba(25,25,25,1);
+        background-color: ${path(['theme', 'colros', 'background', 'dim'])};
         border-color: ${path(['theme', 'colors', 'primary', 'main'])};
     }
 `

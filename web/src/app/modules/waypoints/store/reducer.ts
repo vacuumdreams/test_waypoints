@@ -29,15 +29,16 @@ export function reducer (state: State, action: Action) {
     }
     case ActionMap.GET_LIST_FAILURE: {
         return produce(state, nextState => {
-            nextState.list.loading = true
-            nextState.list.error = action.payload.message
+            console.log(action.payload)
+            nextState.list.loading = false
+            nextState.list.error = true
         })
     }
 
     case ActionMap.UPDATE_ORDER: {
         return produce(state, nextState => {
             nextState.list.loading = true
-            nextState.list.error = null
+            nextState.list.error = false
             nextState.list.order = action.payload.next
         })
     }
@@ -49,7 +50,7 @@ export function reducer (state: State, action: Action) {
     case ActionMap.UPDATE_ORDER_FAILURE: {
         return produce(state, nextState => {
             nextState.list.loading = false
-            nextState.list.error = action.payload.message
+            nextState.list.error = true
             nextState.list.order = action.payload.prev
         })
     }
@@ -73,7 +74,7 @@ export function reducer (state: State, action: Action) {
     case ActionMap.SAVE_ITEM_FAILURE: {
         return produce(state, nextState => {
             nextState.item.loading = false
-            nextState.item.error = action.payload.message
+            nextState.item.error = true
         })
     }
 

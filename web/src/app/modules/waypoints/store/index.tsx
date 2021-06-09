@@ -31,17 +31,17 @@ export const WaypointsProvider = ({ children }) => {
             })
     }, [])
 
-    const updateWaypointsOrder = useCallback(async (newOrder: string[]) => {
+    const updateWaypointsOrder = async (newOrder: string[]) => {
         const startingOrder = state.list.order
         dispatch({ type: ActionMap.UPDATE_ORDER, payload: { next: newOrder } })
         return WaypointService.updateOrder({ user, requestBody: newOrder.map((id, i) => ({ id: parseInt(id), order: i })) })
-            .then(() => {
-                dispatch({ type: ActionMap.UPDATE_ORDER_SUCCESS })
+            .then((results) => {
+                dispatch({ type: ActionMap.UPDATE_ORDER_SUCCESS, payload: results })
             })
             .catch(error => {
                 dispatch({ type: ActionMap.UPDATE_ORDER_FAILURE, payload: { prev: startingOrder, message: error.message } })
             })
-    }, [state.list.order.join()])
+    }
 
     const saveWaypoint = useCallback(async (waypoint: Waypoint) => {
         dispatch({ type: ActionMap.SAVE_ITEM })

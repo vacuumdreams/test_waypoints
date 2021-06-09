@@ -1,4 +1,4 @@
-import { SavedWaypoint } from '../../../../services/client'
+import { SavedWaypoint, WaypointOrder } from '../../../../services/client'
 
 export enum ActionMap {
     GET_LIST = 'getList',
@@ -16,7 +16,7 @@ export type Action = { type: ActionMap.GET_LIST }
     | { type: ActionMap.GET_LIST_SUCCESS, payload: SavedWaypoint[] }
     | { type: ActionMap.GET_LIST_FAILURE, payload: { message: string } }
     | { type: ActionMap.UPDATE_ORDER, payload: { next: string[] } }
-    | { type: ActionMap.UPDATE_ORDER_SUCCESS }
+    | { type: ActionMap.UPDATE_ORDER_SUCCESS, payload: WaypointOrder[] }
     | { type: ActionMap.UPDATE_ORDER_FAILURE, payload: { message: string, prev: string[] } }
     | { type: ActionMap.SAVE_ITEM }
     | { type: ActionMap.SAVE_ITEM_SUCCESS, payload: SavedWaypoint }

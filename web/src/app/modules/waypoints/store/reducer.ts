@@ -7,7 +7,7 @@ import { State } from  './state'
 
 const getOrder = compose(
     map(compose(toString, prop('id'))),
-    sortBy(prop('id')),
+    sortBy(prop('order')),
 )
 
 const getData = (waypoints: SavedWaypoint[]) => indexBy(prop('id'), waypoints)
@@ -48,10 +48,10 @@ export function reducer (state: State, action: Action) {
     case ActionMap.UPDATE_ORDER_SUCCESS: {
         return produce(state, nextState => {
             nextState.order.loading = false
+            nextState.list.order = getOrder(action.payload)
         })
     }
     case ActionMap.UPDATE_ORDER_FAILURE: {
-        console.log(action.payload)
         return produce(state, nextState => {
             nextState.order.loading = false
             nextState.order.error = true
@@ -68,7 +68,6 @@ export function reducer (state: State, action: Action) {
         })
     }
     case ActionMap.SAVE_ITEM_SUCCESS: {
-        console.log(action.payload)
         return produce(state, nextState => {
             nextState.item.loading = false
             nextState.list.order.push(action.payload.id.toString())

@@ -38,6 +38,13 @@ const devConfig = process.env.NODE_ENV !== 'development' ? {} : {
     historyApiFallback: {
       index: '../index.html',
     },
+    proxy: {
+      '/api/v1/**': {
+        target: 'http://localhost:8001',
+        secure: false,
+        changeOrigin: true
+      },
+    },
     serveIndex: true,
     before: async () => {
         if (!hasSandbox) {

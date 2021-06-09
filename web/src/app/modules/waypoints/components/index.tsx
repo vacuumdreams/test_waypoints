@@ -10,6 +10,7 @@ import { Map } from './map/Map'
 import { Add } from './add/Add'
 import { ListContainer } from './list/Container'
 import { Directions } from './list/Directions'
+import { LoadingList } from './list/Loading'
 
 import { useWaypoints } from '../store'
 
@@ -43,7 +44,6 @@ export const WaypointsComponent = ({ config }: Props) => {
   const { state, getWaypoints, updateWaypointsOrder } = useWaypoints()
 
   const isLoading = state.list.loading || state.item.loading
-  console.log(state.item.error)
 
   useEffect(() => {
       getWaypoints()
@@ -65,10 +65,10 @@ export const WaypointsComponent = ({ config }: Props) => {
                       <Message type="error">Could not save save your data.</Message>
                   )}
                   {!state.item.error && !state.list.error && isLoading && (
-                      <Message />
+                      <LoadingList />
                   )}
-                  {!state.item.error && !state.list.error && !isLoading && state.list.data.length === 0 && (
-                      <Message type="info">Go on and add your first place!</Message>
+                  {!state.item.error && !state.list.error && !isLoading && state.list.order.length === 0 && (
+                      <Message type="info">Go on and add your first waypoint!</Message>
                   )}
                   <Blur data-blur={isSearchOpen || isLoading}>
                       <Directions isLoading={isLoading} items={state.list.data} order={state.list.order} setOrder={updateWaypointsOrder} />

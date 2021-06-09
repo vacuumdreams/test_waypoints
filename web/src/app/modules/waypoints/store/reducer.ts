@@ -29,7 +29,6 @@ export function reducer (state: State, action: Action) {
     }
     case ActionMap.GET_LIST_FAILURE: {
         return produce(state, nextState => {
-            console.log(action.payload)
             nextState.list.loading = false
             nextState.list.error = true
         })

@@ -9,9 +9,9 @@ import { reducer } from './reducer'
 
 type ContextType = {
     state: State,
-    getWaypoints: () => void,
-    updateWaypointsOrder: (order: string[]) => void,
-    saveWaypoint: (waypoint: Waypoint) => void,
+    getWaypoints: () => Promise<void>,
+    updateWaypointsOrder: (order: string[]) => Promise<void>,
+    saveWaypoint: (waypoint: Waypoint) => Promise<void>,
 }
 
 export const WaypointsContext = createContext({} as ContextType)

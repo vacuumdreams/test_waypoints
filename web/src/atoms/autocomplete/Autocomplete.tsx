@@ -81,7 +81,7 @@ export function Autocomplete<T = any, P = any> ({
     })
 
     return (
-        <form ref={wrapperRef} role="search" aria-label="Saved waypoints">
+        <form ref={wrapperRef} role="search" aria-label="Saved waypoints" onSubmit={(event) => event.preventDefault()}>
             <Wrapper {...getComboboxProps()}>
                 <Input
                     placeholder={placeholder}

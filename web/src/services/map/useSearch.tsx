@@ -32,7 +32,7 @@ export const useSearch = ({ token }: Props) => {
                   name: feature.place_name,
                   coordinates: {
                     X: feature.geometry.coordinates[0],
-                    Y: feature.geometry.coordinates[0],
+                    Y: feature.geometry.coordinates[1],
                   },
                 }))
             })

@@ -66,6 +66,7 @@ func (s Store) Create(w http.ResponseWriter, r *http.Request, user string) {
 
 func (s Store) Delete(w http.ResponseWriter, r *http.Request, user string, params api.DeleteParams) {
 	err := s.DB.DeleteItem(user, params.Id)
+	var result struct{}
 
 	if err != nil {
 		fmt.Println(fmt.Sprintf("Error deleting waypoint: %v", err))
@@ -75,6 +76,7 @@ func (s Store) Delete(w http.ResponseWriter, r *http.Request, user string, param
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result)
 }
 
 func (s Store) UpdateOrder(w http.ResponseWriter, r *http.Request, user string) {

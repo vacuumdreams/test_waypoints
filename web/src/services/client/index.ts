@@ -1,6 +1,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+export { ApiError } from './core/ApiError';
+export { OpenAPI } from './core/OpenAPI';
+
 export type { Error } from './models/Error';
 export type { SavedWaypoint } from './models/SavedWaypoint';
 export type { Waypoint } from './models/Waypoint';

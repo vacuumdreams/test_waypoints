@@ -124,7 +124,6 @@ async function sendRequest(options: ApiRequestOptions, url: string): Promise<Res
         method: options.method,
         headers: await getHeaders(options),
         body: getRequestBody(options),
-        mode: options.method === 'POST' ? 'no-cors' : undefined,
     };
     if (OpenAPI.WITH_CREDENTIALS) {
         request.credentials = 'include';

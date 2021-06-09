@@ -3,22 +3,19 @@
 /* eslint-disable */
 export const $Waypoint = {
     properties: {
-        coordinates: {
-            properties: {
-                'X': {
-                    type: 'number',
-                    format: 'float',
-                    maximum: 180,
-                    minimum: -180,
-                },
-                'Y': {
-                    type: 'number',
-                    format: 'float',
-                    maximum: 90,
-                    minimum: -90,
-                },
-            },
+        longitude: {
+            type: 'number',
             isRequired: true,
+            format: 'float',
+            maximum: 180,
+            minimum: -180,
+        },
+        latitude: {
+            type: 'number',
+            isRequired: true,
+            format: 'float',
+            maximum: 90,
+            minimum: -90,
         },
         name: {
             type: 'string',

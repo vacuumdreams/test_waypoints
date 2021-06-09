@@ -3,9 +3,7 @@
 /* eslint-disable */
 
 export type Waypoint = {
-    coordinates: {
-        'X'?: number,
-        'Y'?: number,
-    };
+    longitude: number;
+    latitude: number;
     name: string;
 }

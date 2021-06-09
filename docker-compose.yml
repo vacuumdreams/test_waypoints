@@ -1,7 +1,7 @@
 version: '3'
 services:
   db:
-    image: postgres
+    image: postgis/postgis
     restart: always
     environment:
       - PGUSER=${POSTGRES_USER}
@@ -17,6 +17,16 @@ services:
       interval: 30s
       timeout: 30s
       retries: 5
+  migrate:
+      image: migrate/migrate
+      volumes:
+        - .:/migrations
+      command: ["-path", "/migrations/api/db/migrations", "-database",  "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/waypoints?sslmode=disable", "up", "3"]
+      links:
+        - db
+      depends_on:
+        db:
+          condition: service_healthy
   api:
     build:
       context: ./api
@@ -32,7 +42,8 @@ services:
     links:
       - db:db
     depends_on:
-      - db
+      db:
+        condition: service_healthy
   web:
     build: ./web
     ports:

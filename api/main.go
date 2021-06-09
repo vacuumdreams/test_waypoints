@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/go-chi/chi/v5"
 
 	middleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
@@ -17,8 +16,6 @@ import (
 )
 
 func main() {
-	godotenv.Load()
-
 	swagger, err := api.GetSwagger()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading swagger spec\n: %s", err)

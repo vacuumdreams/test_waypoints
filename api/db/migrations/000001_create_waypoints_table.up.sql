@@ -1,9 +1,7 @@
 -- Enable PostGIS (as of 3.0 contains just geometry/geography)
-CREATE EXTENSION postgis;
--- enable raster support (for 3+)
-CREATE EXTENSION postgis_raster;
+CREATE EXTENSION IF NOT EXISTS postgis;
 -- Enable Topology
-CREATE EXTENSION postgis_topology;
+CREATE EXTENSION IF NOT EXISTS postgis_topology;
 
 CREATE TABLE IF NOT EXISTS waypoints(
 id INT GENERATED ALWAYS AS IDENTITY,

@@ -13,7 +13,6 @@ import (
 	"path"
 	"strings"
 
-	"github.com/cridenour/go-postgis"
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/go-chi/chi/v5"
@@ -34,8 +33,9 @@ type SavedWaypoint struct {
 
 // Waypoint defines model for Waypoint.
 type Waypoint struct {
-	Coordinates postgis.Point `json:"coordinates"`
-	Name        string        `json:"name"`
+	Latitude  float32 `json:"latitude"`
+	Longitude float32 `json:"longitude"`
+	Name      string  `json:"name"`
 }
 
 // WaypointOrder defines model for WaypointOrder.
@@ -262,21 +262,21 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"H4sIAAAAAAAC/9RXS48bNwz+KwLbQwtoPXYTFLu6bdMcDARN0Qd6SPagzNC20tEjEsdZ19B/L6jxYxxP",
+	"UrfZBsnF0Ivkp++jyPEWam+Dd+gogdpCqldodRk+jdFHHoToA0YyWJYtpqSXyEPaBAQFiaJxS8hZ7lf8",
+	"q9dYE2QJv+o1Nn/oTfDGEdvotn2+APViC19HXICCr6ojgmoXvjpYZHnZweexwQj5LksYRjuF3moy1DUF",
+	"+8JHqwkULFqvCSRYfW9sZ0HdTCVY4/rJFc92t3KdfYURJNxfLfSfGEGBbpqIKU0OnrOE1rvlBWFm1ydx",
+	"yvSCQAfnWYLTdkSHodl2uzdMFBHptp/lLMVx6y8TnvgGcx6s1YY2P2mLpydr3zmKm5yL2BHfdCZiA+rF",
+	"4NLySPMO4d1IXpzqdqaUaQb3GqEjatd4O+l3vtmKl8zkS1BiKnms73l8cyPyt8Vs6a92vjrj6PvHjMDv",
+	"I39slPEg12cUmQb2Uc8Z4cPGLTwDajDV0QQy3oE6MCUS+aiXKJY+YVwXqGSoxeGZ25/nIGGNMfXGs8l0",
+	"Mi23Deh0MKDgUVmSEDStCteVDqZaz6q3OyfVtksYc4+kRSopxuJoRjRvQMGP/To7idoiYUzlSRuOyY73",
+	"0itgXzAkgmKHcldn2DPeaxvKLQgTzZmks7qy8/ymw7g5ui6E/hfHA6nPMyPfsdMUvEt9Ln43nZ6r8tQG",
+	"2oj9OfF2hU6krq75lTDfj3uj2jvCXeELoTV14bB6ndjJdgD2QzWuL8QlRU5BzN1at6YRzAEmmpSUS521",
+	"Om4OKiWhxV7aCXOglywW7NeAa2bwic5lfhJRf0KZ73p7TPSDbzYPRt+xl5y+SEaYx7V+kLinrW9Evt9W",
+	"KOpCcTNQ6DNJHkZ/QepkeVY/0qCALHEkrZ6ZRJ82qT5CYUNo07+UunT5eW84O7Z1HaPelKpT+iioRyOy",
+	"3Iraty3WPBV+ceA/vSvQL0hddEnQCkVrEvHhxDiGJu977t2ILL+HRhP2DfkLePIXCfPO5+EHhfkfysOD",
+	"Y/yH5LkoJz6TAtOnWzogE+XT6H1lhk3LV0+fjqeRnvlat6LfF11sQQL/KlgRBVVVLe+vfCJ1PZ3O+F/C",
+	"3wEAAP//j4hqfPcMAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 
 	middleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
 	api "github.com/vacuumdreams/waypoints/api"
@@ -50,6 +51,16 @@ func main() {
 	// Use our validation middleware to check all requests against the
 	// OpenAPI schema.
 	r.Use(middleware.OapiRequestValidator(swagger))
+
+	r.Use(cors.Handler(cors.Options{
+		// going to allow everything for now for simplicity
+    AllowedOrigins:   []string{"https://*", "http://*"},
+    AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+    AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+    ExposedHeaders:   []string{"Link"},
+    AllowCredentials: false,
+    MaxAge:           300,
+  }))
 
 	// We now register our server as the handler for the interface
 	api.HandlerFromMux(s, r)

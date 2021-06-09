@@ -7,6 +7,7 @@ require (
 	github.com/deepmap/oapi-codegen v1.7.1
 	github.com/getkin/kin-openapi v0.63.0
 	github.com/go-chi/chi/v5 v5.0.3
+	github.com/go-chi/cors v1.2.0
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

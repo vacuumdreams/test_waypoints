@@ -22,7 +22,7 @@ go build
 
 #### Code generation
 
-The server code and data types are directly generated from the OpenAPI definitions, using the [oapi-codegen](https://github.com/jackc/pgx) library. To regenerate the [server](/), you will need to run the following command:
+The server code and data types are directly generated from the OpenAPI definitions, using the [oapi-codegen](https://github.com/deepmap/oapi-codegen) library. To regenerate the server, you will need to run the following command:
 
 ```
 oapi-codegen -config ./config.yml ../http.yml

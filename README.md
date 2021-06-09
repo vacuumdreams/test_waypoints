@@ -17,3 +17,10 @@ When you're all set, you can spin up the environment:
 ```
 docker-compose up
 ```
+
+### Local development
+
+There are more detailed descriptions in  each folder's root:
+
+- [API](/api)
+- [WEB](/web)

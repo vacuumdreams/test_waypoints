@@ -37,6 +37,7 @@ func (s Store) List(w http.ResponseWriter, r *http.Request, user string) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(list)
 }
@@ -56,6 +57,7 @@ func (s Store) Create(w http.ResponseWriter, r *http.Request, user string) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(result)
 }
@@ -69,6 +71,7 @@ func (s Store) Delete(w http.ResponseWriter, r *http.Request, user string, param
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -87,6 +90,7 @@ func (s Store) UpdateOrder(w http.ResponseWriter, r *http.Request, user string) 
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(result)
 }

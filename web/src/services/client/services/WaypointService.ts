@@ -20,7 +20,7 @@ export class WaypointService {
     }): Promise<Array<SavedWaypoint>> {
         const result = await __request({
             method: 'GET',
-            path: `/waypoints/${user}`,
+            path: `/api/v1/waypoints/${user}`,
         });
         return result.body;
     }
@@ -39,7 +39,7 @@ export class WaypointService {
     }): Promise<Array<WaypointOrder>> {
         const result = await __request({
             method: 'PUT',
-            path: `/waypoints/${user}`,
+            path: `/api/v1/waypoints/${user}`,
             body: requestBody,
             errors: {
                 400: `Invalid request.`,
@@ -62,7 +62,7 @@ export class WaypointService {
     }): Promise<SavedWaypoint> {
         const result = await __request({
             method: 'POST',
-            path: `/waypoint/${user}`,
+            path: `/api/v1/waypoint/${user}`,
             body: requestBody,
             errors: {
                 400: `Invalid request.`,
@@ -85,7 +85,7 @@ export class WaypointService {
     }): Promise<any> {
         const result = await __request({
             method: 'DELETE',
-            path: `/waypoint/${user}`,
+            path: `/api/v1/waypoint/${user}`,
             query: {
                 'id': id,
             },

@@ -1,12 +1,12 @@
 import produce from 'immer'
-import { compose, map, prop, indexBy, sortBy } from 'ramda'
+import { compose, map, prop, indexBy, sortBy, toString } from 'ramda'
 
 import { SavedWaypoint } from '../../../../services/client'
 import { Action, ActionMap } from  './actions'
 import { State } from  './state'
 
 const getOrder = compose(
-    map(prop('id')),
+    map(compose(toString, prop('id'))),
     sortBy(prop('id')),
 )
 
@@ -63,7 +63,7 @@ export function reducer (state: State, action: Action) {
     case ActionMap.SAVE_ITEM_SUCCESS: {
         return produce(state, nextState => {
             nextState.item.loading = false
-            nextState.list.order.push(action.payload.id)
+            nextState.list.order.push(action.payload.id.toString())
             nextState.list.data = {
               ...state.list.data,
               [action.payload.id]: action.payload,

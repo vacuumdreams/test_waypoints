@@ -28,8 +28,11 @@ const Wrapper = styled.div`
 
 export const Directions = ({ isLoading, items, order, setOrder }: Props) => {
     const onDragEnd = (result: DropResult) => {
-        if (!isLoading && result.source && result.destination) {
-            setOrder(move(result.source.index, result.destination.index, order))
+        if (!isLoading && order.length > 1 && result.source && result.destination) {
+            const newOrder = move(result.source.index, result.destination.index, order)
+            if (newOrder.join() !== order.join()) {
+              setOrder(newOrder)
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, useCallback } from 'react'
 
-import { WaypointService, Waypoint, Id } from  '../../../../services/client'
+import { WaypointService, Waypoint } from  '../../../../services/client'
 import { getUser } from  '../../../../services/storage/user'
 
 import { initialState, State } from './state'
@@ -34,7 +34,7 @@ export const WaypointsProvider = ({ children }) => {
     const updateWaypointsOrder = useCallback(async (newOrder: string[]) => {
         const startingOrder = state.list.order
         dispatch({ type: ActionMap.UPDATE_ORDER, payload: { next: newOrder } })
-        return WaypointService.updateOrder({ user, requestBody: newOrder.map((id, i) => ({ id, order: i })) })
+        return WaypointService.updateOrder({ user, requestBody: newOrder.map((id, i) => ({ id: parseInt(id), order: i })) })
             .then(() => {
                 dispatch({ type: ActionMap.UPDATE_ORDER_SUCCESS })
             })

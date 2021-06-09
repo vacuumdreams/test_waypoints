@@ -1,14 +1,13 @@
 package main
 
 import (
-	"strconv"
-	"strings"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/go-chi/chi/v5"
 
 	middleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
@@ -17,36 +16,28 @@ import (
 	server "github.com/vacuumdreams/waypoints/server"
 )
 
-func parseURL (url string) (int, string) {
-	chunks := strings.Split(url, ":")
-	chunks = strings.Split(chunks[2], "/")
-	port, err := strconv.Atoi(chunks[0])
-
-	if err  !=  nil {
-		port =  8080
-	}
-
-	return port, "/" + strings.Join(chunks[1:], "/")
-}
-
 func main() {
+	godotenv.Load()
+
 	swagger, err := api.GetSwagger()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading swagger spec\n: %s", err)
 		os.Exit(1)
 	}
 
-	port_number, base_url := parseURL(swagger.Servers[0].URL)
+	swagger.Servers = nil
 
-	var port = flag.Int("port", port_number, "Port for test HTTP server")
+	var port = flag.Int("port", 8001, "Port for test HTTP server")
 	flag.Parse()
 
-	db_user, db_password, db_name :=
+	db_host, db_port, db_user, db_password, db_name :=
+		os.Getenv("POSTGRES_HOST"),
+		os.Getenv("POSTGRES_PORT"),
 		os.Getenv("POSTGRES_USER"),
 		os.Getenv("POSTGRES_PASSWORD"),
 		os.Getenv("POSTGRES_DB")
 
-	database, err := db.Initialize(db_user, db_password, db_name)
+	database, err := db.Initialize(db_host, db_port, db_user, db_password, db_name)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error connecting to database\n: %s", err)
 		os.Exit(1)
@@ -64,7 +55,7 @@ func main() {
 	r.Use(middleware.OapiRequestValidator(swagger))
 
 	// We now register our server as the handler for the interface
-	api.HandlerFromMuxWithBaseURL(s, r, base_url)
+	api.HandlerFromMux(s, r)
 
 	waypoints_api := &http.Server{
 		Handler: r,

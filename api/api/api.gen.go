@@ -64,16 +64,16 @@ type UpdateOrderJSONRequestBody UpdateOrderJSONBody
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Deletes a waypoint.
-	// (DELETE /waypoint/{user})
+	// (DELETE /api/v1/waypoint/{user})
 	Delete(w http.ResponseWriter, r *http.Request, user string, params DeleteParams)
 	// Saves a waypoint.
-	// (POST /waypoint/{user})
+	// (POST /api/v1/waypoint/{user})
 	Create(w http.ResponseWriter, r *http.Request, user string)
 	// Returns the list of saved waypoints.
-	// (GET /waypoints/{user})
+	// (GET /api/v1/waypoints/{user})
 	List(w http.ResponseWriter, r *http.Request, user string)
 	// Updates waypoint order.
-	// (PUT /waypoints/{user})
+	// (PUT /api/v1/waypoints/{user})
 	UpdateOrder(w http.ResponseWriter, r *http.Request, user string)
 }
 
@@ -244,16 +244,16 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	}
 
 	r.Group(func(r chi.Router) {
-		r.Delete(options.BaseURL+"/waypoint/{user}", wrapper.Delete)
+		r.Delete(options.BaseURL+"/api/v1/waypoint/{user}", wrapper.Delete)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/waypoint/{user}", wrapper.Create)
+		r.Post(options.BaseURL+"/api/v1/waypoint/{user}", wrapper.Create)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/waypoints/{user}", wrapper.List)
+		r.Get(options.BaseURL+"/api/v1/waypoints/{user}", wrapper.List)
 	})
 	r.Group(func(r chi.Router) {
-		r.Put(options.BaseURL+"/waypoints/{user}", wrapper.UpdateOrder)
+		r.Put(options.BaseURL+"/api/v1/waypoints/{user}", wrapper.UpdateOrder)
 	})
 
 	return r
@@ -262,21 +262,21 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

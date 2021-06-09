@@ -4,10 +4,10 @@ info:
   description: Waypoint storage goserver
   version: 1.0.0
 servers:
-  - url: http://localhost:8001/api/v1
+  - url: http://localhost:8001
     description: Local server url
 paths:
-  /waypoints/{user}:
+  /api/v1/waypoints/{user}:
     get:
       tags:
         - waypoint
@@ -69,7 +69,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /waypoint/{user}:
+  /api/v1/waypoint/{user}:
     post:
       tags:
         - waypoint

@@ -84,6 +84,28 @@ export function reducer (state: State, action: Action) {
         })
     }
 
+    case ActionMap.DELETE_ITEM: {
+        return produce(state, nextState => {
+            nextState.item.loading = true
+            nextState.list.error = false
+            nextState.item.error = false
+            nextState.order.error = false
+        })
+    }
+    case ActionMap.DELETE_ITEM_SUCCESS: {
+        return produce(state, nextState => {
+            nextState.item.loading = false
+            nextState.list.order.splice(nextState.list.order.indexOf(action.payload.id.toString()), 1)
+            delete nextState.list.data[action.payload.id]
+        })
+    }
+    case ActionMap.DELETE_ITEM_FAILURE: {
+        return produce(state, nextState => {
+            nextState.item.loading = false
+            nextState.item.error = true
+        })
+    }
+
     default:
       throw new Error();
   }

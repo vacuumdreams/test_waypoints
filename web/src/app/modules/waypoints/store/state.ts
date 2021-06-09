@@ -13,6 +13,10 @@ export type State = {
         loading: boolean,
         error: boolean,
     },
+    itemDelete: {
+        loading: boolean,
+        error: boolean,
+    },
     order: {
         loading: boolean,
         error: boolean,
@@ -27,6 +31,10 @@ export const initialState: State = {
         data: {},
     },
     item: {
+        loading: false,
+        error: false,
+    },
+    itemDelete: {
         loading: false,
         error: false,
     },

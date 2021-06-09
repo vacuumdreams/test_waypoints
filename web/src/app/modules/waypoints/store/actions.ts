@@ -10,6 +10,9 @@ export enum ActionMap {
     SAVE_ITEM = 'saveItem',
     SAVE_ITEM_SUCCESS = 'saveItemSuccess',
     SAVE_ITEM_FAILURE = 'saveItemFailure',
+    DELETE_ITEM = 'deleteItem',
+    DELETE_ITEM_SUCCESS = 'deleteItemSuccess',
+    DELETE_ITEM_FAILURE = 'deleteItemFailure',
 }
 
 export type Action = { type: ActionMap.GET_LIST }
@@ -21,3 +24,6 @@ export type Action = { type: ActionMap.GET_LIST }
     | { type: ActionMap.SAVE_ITEM }
     | { type: ActionMap.SAVE_ITEM_SUCCESS, payload: SavedWaypoint }
     | { type: ActionMap.SAVE_ITEM_FAILURE, payload: { message: string } }
+    | { type: ActionMap.DELETE_ITEM }
+    | { type: ActionMap.DELETE_ITEM_SUCCESS, payload: SavedWaypoint }
+    | { type: ActionMap.DELETE_ITEM_FAILURE, payload: { message: string } }

@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, useCallback } from 'react'
 
-import { WaypointService, Waypoint } from  '../../../../services/client'
+import { WaypointService, Waypoint, SavedWaypoint } from  '../../../../services/client'
 import { getUser } from  '../../../../services/storage/user'
 
 import { initialState, State } from './state'
@@ -12,6 +12,7 @@ type ContextType = {
     getWaypoints: () => Promise<void>,
     updateWaypointsOrder: (order: string[]) => Promise<void>,
     saveWaypoint: (waypoint: Waypoint) => Promise<void>,
+    deleteWaypoint: (waypoint: SavedWaypoint) => Promise<void>,
 }
 
 export const WaypointsContext = createContext({} as ContextType)
@@ -54,8 +55,19 @@ export const WaypointsProvider = ({ children }) => {
             })
     }, [])
 
+    const deleteWaypoint = useCallback(async (waypoint: SavedWaypoint) => {
+        dispatch({ type: ActionMap.SAVE_ITEM })
+        return WaypointService.delete({ user, id: waypoint.id })
+            .then(waypoint => {
+                dispatch({ type: ActionMap.SAVE_ITEM_SUCCESS, payload: waypoint })
+            })
+            .catch(error => {
+                dispatch({ type: ActionMap.SAVE_ITEM_FAILURE, payload: error.message })
+            })
+    }, [])
+
     return (
-        <WaypointsContext.Provider value={{ state, getWaypoints, updateWaypointsOrder, saveWaypoint }}>
+        <WaypointsContext.Provider value={{ state, getWaypoints, updateWaypointsOrder, saveWaypoint, deleteWaypoint }}>
             {children}
         </WaypointsContext.Provider>
     )

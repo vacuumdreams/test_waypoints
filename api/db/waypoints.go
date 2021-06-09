@@ -86,14 +86,12 @@ func (db Database) UpdateOrders(userId string, orders []api.WaypointOrder) ([]ap
 	query = strings.TrimSuffix(query, ",")
 
 	query = fmt.Sprintf(`
-  WITH upd AS (
-    INSERT INTO waypoints_order (waypoint_id, user_id, order_id)
-    VALUES %s
-    ON CONFLICT (waypoint_id)
-    DO UPDATE SET order_id = EXCLUDED.order_id
-    WHERE waypoints_order.user_id = $1
-  )
-  SELECT waypoint_id, order_id FROM waypoints_order WHERE user_id = $1;
+  INSERT INTO waypoints_order (waypoint_id, user_id, order_id)
+  VALUES %s
+  ON CONFLICT (waypoint_id)
+  DO UPDATE SET order_id = EXCLUDED.order_id
+  WHERE waypoints_order.user_id = $1
+	RETURNING waypoint_id, order_id
   `, query)
 
 	rows, err := db.Conn.Query(context.Background(), query, values...)

@@ -139,25 +139,22 @@ components:
     Waypoint:
       type: object
       required:
-        - coordinates
+        - longitude
+        - latitude
         - name
       properties:
-        coordinates:
-          type: object
-          x-go-type: 'postgis.Point'
-          properties:
-            X:
-              type: number
-              format: float
-              minimum: -180
-              maximum: 180
-              x-faker: address.longitude
-            Y:
-              type: number
-              format: float
-              minimum: -90
-              maximum: 90
-              x-faker: address.latitude
+        longitude:
+          type: number
+          format: float
+          minimum: -180
+          maximum: 180
+          x-faker: address.longitude
+        latitude:
+          type: number
+          format: float
+          minimum: -90
+          maximum: 90
+          x-faker: address.latitude
         name:
           type: string
           x-faker: '{{address.streetAddress}}, {{address.zipCode}} {{address.cityName}}, {{address.country}}'

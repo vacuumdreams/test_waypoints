@@ -58,11 +58,14 @@ export const WaypointsComponent = ({ config }: Props) => {
                       <Add isLoading={isLoading} config={config.mapbox} setSearchOpen={setSearchOpen} />
                   </ButtonWrap>
                   <Divider />
-                  {!state.item.error && state.list.error && (
+                  {state.list.error && (
                       <Message type="error">Could not load your saved waypoints.</Message>
                   )}
                   {state.item.error && (
                       <Message type="error">Could not save save your data.</Message>
+                  )}
+                  {state.order.error && (
+                      <Message type="error">Could not save save new  order.</Message>
                   )}
                   {!state.item.error && !state.list.error && isLoading && (
                       <LoadingList />
@@ -71,7 +74,7 @@ export const WaypointsComponent = ({ config }: Props) => {
                       <Message type="info">Go on and add your first waypoint!</Message>
                   )}
                   <Blur data-blur={isSearchOpen || isLoading}>
-                      <Directions isLoading={isLoading} items={state.list.data} order={state.list.order} setOrder={updateWaypointsOrder} />
+                      <Directions isLoading={isLoading || state.order.loading} items={state.list.data} order={state.list.order} setOrder={updateWaypointsOrder} />
                   </Blur>
               </ListContainer>
               <Map config={config.mapbox} />

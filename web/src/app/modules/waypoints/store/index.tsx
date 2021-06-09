@@ -41,7 +41,7 @@ export const WaypointsProvider = ({ children }) => {
             .catch(error => {
                 dispatch({ type: ActionMap.UPDATE_ORDER_FAILURE, payload: { prev: startingOrder, message: error.message } })
             })
-    }, [])
+    }, [state.list.order.join()])
 
     const saveWaypoint = useCallback(async (waypoint: Waypoint) => {
         dispatch({ type: ActionMap.SAVE_ITEM })

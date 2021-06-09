@@ -17,7 +17,9 @@ export function reducer (state: State, action: Action) {
     case ActionMap.GET_LIST: {
         return produce(state, nextState => {
             nextState.list.loading = true
-            nextState.list.error = null
+            nextState.list.error = false
+            nextState.item.error = false
+            nextState.order.error = false
         })
     }
     case ActionMap.GET_LIST_SUCCESS: {
@@ -36,20 +38,23 @@ export function reducer (state: State, action: Action) {
 
     case ActionMap.UPDATE_ORDER: {
         return produce(state, nextState => {
-            nextState.list.loading = true
+            nextState.order.loading = true
             nextState.list.error = false
+            nextState.item.error = false
+            nextState.order.error = false
             nextState.list.order = action.payload.next
         })
     }
     case ActionMap.UPDATE_ORDER_SUCCESS: {
         return produce(state, nextState => {
-            nextState.list.loading = false
+            nextState.order.loading = false
         })
     }
     case ActionMap.UPDATE_ORDER_FAILURE: {
+        console.log(action.payload)
         return produce(state, nextState => {
-            nextState.list.loading = false
-            nextState.list.error = true
+            nextState.order.loading = false
+            nextState.order.error = true
             nextState.list.order = action.payload.prev
         })
     }
@@ -57,10 +62,13 @@ export function reducer (state: State, action: Action) {
     case ActionMap.SAVE_ITEM: {
         return produce(state, nextState => {
             nextState.item.loading = true
-            nextState.item.error = null
+            nextState.list.error = false
+            nextState.item.error = false
+            nextState.order.error = false
         })
     }
     case ActionMap.SAVE_ITEM_SUCCESS: {
+        console.log(action.payload)
         return produce(state, nextState => {
             nextState.item.loading = false
             nextState.list.order.push(action.payload.id.toString())

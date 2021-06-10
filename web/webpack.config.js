@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const webpack = require('webpack')
 const { spawn } = require('child_process')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
@@ -14,6 +15,9 @@ const cutomPackageEntry = path.join(__dirname, 'sandbox', 'entry.tsx')
 
 const devPlugins = [
   new HtmlWebpackPlugin({ template: path.join(__dirname, 'index.html') }),
+  new webpack.DefinePlugin({
+    'process.env.API': JSON.stringify('http://localhost:8080'),
+  })
 ]
 
 const prodPlugins = [
@@ -23,6 +27,9 @@ const prodPlugins = [
       { from: path.join(__dirname, 'server.js'), to: '.' },
     ],
   }),
+  new webpack.DefinePlugin({
+    'process.env.API': JSON.stringify(`http://${process.env.API}`),
+  })
 ]
 
 const devConfig = process.env.NODE_ENV !== 'development' ? {} : {

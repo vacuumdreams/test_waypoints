@@ -6,6 +6,9 @@ import { ThemeProvider } from '../services/theme/Provider'
 import { theme, Theme, ThemeMode } from './theme'
 import { config } from './config'
 import { Waypoints } from './modules/waypoints'
+import  { OpenAPI } from '../services/client'
+
+OpenAPI.BASE = process.env.API
 
 const Global = createGlobalStyle`
     body {

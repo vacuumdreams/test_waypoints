@@ -5,6 +5,7 @@
 The environment variables needed for the docker compose  to run successfully:
 
 ```
+export HOST=localhost
 export POSTGRES_PORT=5432
 export POSTGRES_USER=lol
 export POSTGRES_PASSWORD=givemecatmemes

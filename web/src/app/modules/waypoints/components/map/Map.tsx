@@ -29,11 +29,11 @@ const MapContainer = styled(Blur)`
 
 export const Map = ({ config }: Props) => {
     const theme = useContext(ThemeContext)
-    const { ref, isLoading, addMarkers } = useMap({ ...config, mode: theme.mode, markerColor: theme.colors.primary.main })
+    const { ref, isLoading, manageMarkers } = useMap({ ...config, mode: theme.mode, markerColor: theme.colors.primary.main })
     const { state } = useWaypoints()
 
     useEffect(() => {
-        addMarkers(state.list.order.map(id => state.list.data[id]))
+        manageMarkers(state.list.data)
     }, [state.list.order.join()])
 
     return (

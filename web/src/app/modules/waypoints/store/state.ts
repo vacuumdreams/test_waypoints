@@ -1,13 +1,15 @@
 import { SavedWaypoint } from '../../../../services/client'
 
+export type IndexedWaypoints = {
+    [key: string]: SavedWaypoint,
+}
+
 export type State = {
     list: {
         loading: boolean,
         error: boolean,
         order: string[],
-        data: {
-          [key: string]: SavedWaypoint,
-        },
+        data: IndexedWaypoints,
     },
     item: {
         loading: boolean,

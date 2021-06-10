@@ -16,7 +16,7 @@ const cutomPackageEntry = path.join(__dirname, 'sandbox', 'entry.tsx')
 const devPlugins = [
   new HtmlWebpackPlugin({ template: path.join(__dirname, 'index.html') }),
   new webpack.DefinePlugin({
-    'process.env.API': JSON.stringify('http://localhost:8080'),
+    'process.env.API': hasSandbox ? JSON.stringify('http://localhost:8080') : JSON.stringify('http://localhost:8001'),
   })
 ]
 
@@ -28,7 +28,7 @@ const prodPlugins = [
     ],
   }),
   new webpack.DefinePlugin({
-    'process.env.API': JSON.stringify(`http://${process.env.API}`),
+    'process.env.API': JSON.stringify(process.env.API || 'http://localhost:80'),
   })
 ]
 
